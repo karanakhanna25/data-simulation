@@ -1,0 +1,19 @@
+<!-- <nav mat-tab-nav-bar>
+  <a mat-tab-link
+     *ngFor="let link of navLinks"
+     [routerLink]="link.path"
+     routerLinkActive #rla="routerLinkActive"
+     [active]="rla.isActive">
+    {{ link.label }}
+  </a>hj
+</nav> -->
+<nav mat-tab-nav-bar [backgroundColor]="'primary'" [tabPanel]="tabPanel">
+  @for (link of navLinks; track link) {
+    <a mat-tab-link
+    [routerLink]="link.path"
+    [routerLinkActive]="['data-upload']"
+      > {{link.label}} </a>
+  }
+  <a mat-tab-link disabled>Disabled Link</a>
+</nav>
+<mat-tab-nav-panel #tabPanel> <router-outlet></router-outlet></mat-tab-nav-panel>
