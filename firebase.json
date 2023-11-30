@@ -1,0 +1,12 @@
+{
+  "database": {
+    "rules": "quant-sim-database.json"
+  },
+  "hosting": [
+    {
+      "target": "data-simulation",
+      "source": ".",
+      "frameworksBackend": {}
+    }
+  ]
+}

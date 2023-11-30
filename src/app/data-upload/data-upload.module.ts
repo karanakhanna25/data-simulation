@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { DataUploadComponent } from './data-upload.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
 import { DataUploadRoutingModule } from './data-upload-routing.module';
+import {MatButtonModule} from '@angular/material/button';
+import { FirebaseService } from './services/firebase.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     DataUploadComponent,
   ],
   imports: [
-    DataUploadRoutingModule
+    DataUploadRoutingModule,
+    MatButtonModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [FirebaseService],
   bootstrap: []
 })
 export class DataUploadModule { }

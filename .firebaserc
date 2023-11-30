@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "quant-sim"
+  },
+  "targets": {
+    "quant-sim": {
+      "hosting": {
+        "data-simulation": [
+          "quant-sim"
+        ]
+      }
+    }
+  }
+}
