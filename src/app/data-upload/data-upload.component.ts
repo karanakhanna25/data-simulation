@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
 import * as XLSX from 'xlsx';
-import { IDataGapperUpload, IDataGapperUploadFields } from './data-upload.model';
-import { FirebaseService } from './services/firebase.service';
+import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from './data-upload.model';
 import { DataUploadStore } from './stores/data-upload.store/data-upload.store';
 
 @Component({
-  selector: 'app-root',
+  selector: 'quant-sim-data-upload',
   templateUrl: 'data-upload.component.html',
   styleUrl: 'data-upload.component.scss'
 })
 export class DataUploadComponent {
 
-  constructor(private _store: DataUploadStore) {
-    this._store.gusData$.subscribe(data => console.log(data))
-  }
+  constructor(private _store: DataUploadStore) {  }
 
   onFileChanged(evt: Event): void {
     const target: DataTransfer = evt.target as unknown as DataTransfer;
@@ -34,15 +31,15 @@ export class DataUploadComponent {
           }, {});
           acc.push(rowObj);
           return acc;
-        }, []) as IDataGapperUpload[]).map(d => ({...d, id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUpload[];
-        this._store.uploadGusData(data);
+        }, []) as IDataGapperUploadExtended[]).map(d => ({...d, ["Day 1 Date"]: new Date(d['Day 1 Date']) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
+        this._store.uploadGusData(data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ));
       }
     }
     reader.readAsBinaryString(target.files[0]);
   }
 
-  private _mapToFields(data: IDataGapperUpload[]): IDataGapperUpload[] {
-    const fields = Object.keys(IDataGapperUploadFields);
+  private _mapToFields(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
+    const fields = Object.keys(IDataGapperUploadExtendedFields);
     return data.map(d => {
       const dataKeys = Object.keys(d);
       return dataKeys.reduce((obj: any, key: string) => {

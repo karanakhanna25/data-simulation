@@ -1,7 +1,7 @@
-import { IDataGapperUpload } from "@app-data-upload/data-upload.model"
+import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model"
 
 export interface IDataUploadSate {
-  gus: IDataGapperUpload[]
+  gus: IDataGapperUploadExtended[]
 };
 
 export const dataUploadInitialState: IDataUploadSate = {

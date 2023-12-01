@@ -4,7 +4,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-        "@app-data-upload/*": ["src/app/data-upload/*"]
+        "@app-data-upload/*": ["src/app/data-upload/*"],
+        "@app-simulation/*": ["src/app/simulation/*"]
     },
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,

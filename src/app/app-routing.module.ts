@@ -8,7 +8,15 @@ const routes: Routes = [
       import('@app-data-upload/data-upload.module').then(
         (m) => m.DataUploadModule
       )
-  }
+  },
+  {
+    path: 'simulation',
+    loadChildren: () =>
+      import('@app-simulation/simulation.module').then(
+        (m) => m.SimulationdModule
+      )
+  },
+
 ];
 
 @NgModule({

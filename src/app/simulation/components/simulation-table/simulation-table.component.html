@@ -1,0 +1,10 @@
+<div class="stats">
+  <label>({{closedRed().length}} out of {{(filteredRows() || []).length}} items closed red. {{closedRedPercent()}}%)</label>
+</div>
+<ag-grid-angular
+(gridReady)="onGridReady($event)"
+[gridOptions]="gridoptions"
+class="ag-theme-quartz"
+[rowData]="rowData()"
+[columnDefs]="colDefs">
+</ag-grid-angular>

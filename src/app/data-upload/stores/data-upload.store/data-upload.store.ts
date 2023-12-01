@@ -1,17 +1,22 @@
 import { Injectable } from "@angular/core";
 import { ComponentStore } from "@ngrx/component-store";
 import { dataUploadInitialState, IDataUploadSate } from "./data-upload.state";
-import { map, Observable, switchMap, tap, withLatestFrom } from "rxjs";
-import { IDataGapperUpload } from "@app-data-upload/data-upload.model";
-import {uniqBy} from 'lodash';
+import { Observable, switchMap, tap, withLatestFrom } from "rxjs";
+import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
+import {uniq} from 'lodash';
 import { FirebaseService } from "@app-data-upload/services/firebase.service";
 
 @Injectable()
 export class DataUploadStore extends ComponentStore<IDataUploadSate> {
 
-  readonly gusData$ = this.select(state => state.gus);
+  readonly gusData = this.selectSignal(state => state.gus.map(g => ({
+    ...g,
+    "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"])
+  })));
+  readonly allIndustries = this.selectSignal(state => uniq(state.gus.map(g => g.Industry)));
+  readonly allSectors = this.selectSignal(state => uniq(state.gus.map(g => g.Sector)));
 
-  readonly updateGusRecords = this.updater((state, gus: IDataGapperUpload[]) => ({
+  readonly updateGusRecords = this.updater((state, gus: IDataGapperUploadExtended[]) => ({
     ...state,
     gus
   }))
@@ -20,10 +25,8 @@ export class DataUploadStore extends ComponentStore<IDataUploadSate> {
     super(dataUploadInitialState)
   }
 
-  readonly uploadGusData = this.effect((trigger$: Observable<IDataGapperUpload[]>) =>
+  readonly uploadGusData = this.effect((trigger$: Observable<IDataGapperUploadExtended[]>) =>
     trigger$.pipe(
-      withLatestFrom(this.gusData$),
-      map(([newData, prevData]) => this._generateUniqDataSet(prevData, newData)),
       switchMap(data => this._firebaseService.addGUSRecords(data).pipe(
         tap((data) => this.updateGusRecords(data))
       )),
@@ -38,8 +41,8 @@ export class DataUploadStore extends ComponentStore<IDataUploadSate> {
     )
   )
 
-  private _generateUniqDataSet(prevData: IDataGapperUpload[], newData: IDataGapperUpload[]): IDataGapperUpload[] {
-    return uniqBy([...(prevData || []), ...(newData || [])], 'id');
+  private _calculateDistanceOpenPmh(open: number, pmh: number): number {
+    return Number(((open-pmh)/open*100).toFixed(2));
   }
 
 }
