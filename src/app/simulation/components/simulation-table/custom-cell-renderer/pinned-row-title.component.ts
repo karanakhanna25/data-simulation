@@ -10,7 +10,6 @@ import { ICellRendererParams } from "ag-grid-community";
 export class TopPinnedRowComponent implements ICellRendererAngularComp {
   params!: ICellRendererParams;
   agInit(params: ICellRendererParams<any, any, any>): void {
-    console.log(params)
     this.params = params;
   }
   refresh(params: ICellRendererParams<any, any, any>): boolean {

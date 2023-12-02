@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  margin: 16px;
+  flex-direction: column;
+}
+
+.action-buttons {
+  align-self: flex-end;
+}

@@ -43,6 +43,7 @@ export interface IDataGapper {
 export interface IDataGapperUploadExtended extends IDataGapper {
   id: string;
   'pmh-open%'?: number;
+  'Closed Status'?: 'Closed Red' | 'Closed Green';
 }
 
 export enum IDataGapperUploadExtendedFields {
@@ -85,5 +86,6 @@ export enum IDataGapperUploadExtendedFields {
   'Sector' = 'Sector',
   'Market Cap' = 'Market Cap',
   'Float' = 'Float',
-  'pmh-open%' = 'pmh-open%'
+  'pmh-open%' = 'pmh-open%',
+  'Closed Status' = 'Closed Status'
 }

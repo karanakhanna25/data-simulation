@@ -1,0 +1,8 @@
+
+<label>Date: {{date}}</label>
+<label>ticker: {{data.Ticker}}</label>
+<label>Premarket Volume: {{data['Day 1 PM Vol'] | number }}</label>
+<tv-lightweight-chart *ngIf="!!ticker && !!date" [ticker]="ticker" [date]="date"></tv-lightweight-chart>
+<div class="action-buttons">
+  <button mat-button color="primary" [mat-dialog-close]="true">close</button>
+</div>

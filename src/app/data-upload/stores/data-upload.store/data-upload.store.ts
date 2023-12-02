@@ -11,7 +11,8 @@ export class DataUploadStore extends ComponentStore<IDataUploadSate> {
 
   readonly gusData = this.selectSignal(state => state.gus.map(g => ({
     ...g,
-    "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"])
+    "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
+    "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green'
   })));
   readonly allIndustries = this.selectSignal(state => uniq(state.gus.map(g => g.Industry)));
   readonly allSectors = this.selectSignal(state => uniq(state.gus.map(g => g.Sector)));

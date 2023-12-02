@@ -5,19 +5,27 @@ import { AgGridModule } from 'ag-grid-angular';
 import { SimulationTableComponent } from './components/simulation-table/simulation-table.component';
 import { CommonModule } from '@angular/common';
 import { SimulationComponent } from './components/simulation.component';
-
+import {MatDialogModule} from '@angular/material/dialog';
+import { PolygonService } from '@app-data-upload/services/polygon.service';
+import { ChartModalContainerComponent } from './components/chart-modal-container.component';
+import { TVLightweightChartComponent } from './components/tv-chart-renderer/tv-chart-renderer.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
     SimulationComponent,
-    SimulationTableComponent
+    SimulationTableComponent,
+    ChartModalContainerComponent,
+    TVLightweightChartComponent
   ],
   imports: [
     CommonModule,
     SimulationRoutingModule,
-    AgGridModule
+    AgGridModule,
+    MatDialogModule,
+    MatButtonModule
   ],
   exports: [],
-  providers: [FirebaseService],
+  providers: [FirebaseService, PolygonService],
 })
 export class SimulationdModule { }

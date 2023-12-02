@@ -1,7 +1,9 @@
 import { formatDate } from '@angular/common';
 import { IDataGapperUploadExtendedFields } from '@app-data-upload/data-upload.model'
+import { ClosedStatusFilter } from '@app-simulation/components/custom-filter/closed-status-filter.component';
 import { IndustryFilter } from '@app-simulation/components/custom-filter/inductry-filter.component';
 import { SectorFilter } from '@app-simulation/components/custom-filter/sector-filter.component';
+import { ClosedStatusComponent } from '@app-simulation/components/simulation-table/custom-cell-renderer/closed-status.component';
 import { TopPinnedRowComponent } from '@app-simulation/components/simulation-table/custom-cell-renderer/pinned-row-title.component';
 import { CellRendererSelectorResult, ColDef, ICellRendererParams, ValueFormatterParams} from 'ag-grid-community'
 
@@ -39,8 +41,19 @@ function tickerCellRenderer(params: ICellRendererParams): CellRendererSelectorRe
   }
 }
 
+
+
 export function agGridColumnDefs(): ColDef[] {
   return [
+    {
+      headerName: IDataGapperUploadExtendedFields['Closed Status'],
+      field: IDataGapperUploadExtendedFields['Closed Status'],
+      cellRenderer: ClosedStatusComponent ,
+      cellClass: 'center-align',
+      pinned: 'left',
+      filter: ClosedStatusFilter,
+      width: 120
+    },
     {
       headerName: IDataGapperUploadExtendedFields.Ticker,
       field: IDataGapperUploadExtendedFields.Ticker,
