@@ -50,7 +50,7 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields['Closed Status'],
       cellRenderer: ClosedStatusComponent ,
       cellClass: 'center-align',
-      pinned: 'left',
+
       filter: ClosedStatusFilter,
       width: 120
     },
@@ -60,14 +60,14 @@ export function agGridColumnDefs(): ColDef[] {
       filter: true,
       cellRendererSelector: tickerCellRenderer,
       cellClass: 'center-align',
-      pinned: 'left',
+
       width: 120
     },
     {
       headerName: IDataGapperUploadExtendedFields['Day 1 Date'],
       field: IDataGapperUploadExtendedFields['Day 1 Date'],
       filter: 'agDateColumnFilter',
-      pinned: 'left',
+
       width: 120,
       valueFormatter: dateValueFormatter,
       filterParams: {
@@ -340,7 +340,6 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields['Market Cap'],
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
-      pinned: 'right',
       valueFormatter: numberFormatter,
       width: 130
     },
@@ -349,14 +348,14 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields.Float,
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
-      pinned: 'right',
+
       width: 130
     },
     {
       headerName: IDataGapperUploadExtendedFields.Industry,
       field: IDataGapperUploadExtendedFields.Industry,
       filter: IndustryFilter,
-      pinned: 'right',
+
       width: 140,
       tooltipField: IDataGapperUploadExtendedFields.Industry
     },
@@ -364,7 +363,7 @@ export function agGridColumnDefs(): ColDef[] {
       headerName: IDataGapperUploadExtendedFields.Sector,
       field: IDataGapperUploadExtendedFields.Sector,
       filter: SectorFilter,
-      pinned: 'right',
+
       width: 140,
       tooltipField: IDataGapperUploadExtendedFields.Sector
     },

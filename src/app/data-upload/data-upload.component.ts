@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from './data-upload.model';
-import { DataUploadStore } from './stores/data-upload.store/data-upload.store';
+import { SimulationDataStore } from './stores/data-upload.store/data-upload.store';
 
 @Component({
   selector: 'quant-sim-data-upload',
@@ -10,7 +10,7 @@ import { DataUploadStore } from './stores/data-upload.store/data-upload.store';
 })
 export class DataUploadComponent {
 
-  constructor(private _store: DataUploadStore) {  }
+  constructor(private _store: SimulationDataStore) {  }
 
   onFileChanged(evt: Event): void {
     const target: DataTransfer = evt.target as unknown as DataTransfer;

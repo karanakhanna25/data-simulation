@@ -10,20 +10,29 @@ import { PolygonService } from '@app-data-upload/services/polygon.service';
 import { ChartModalContainerComponent } from './components/chart-modal-container.component';
 import { TVLightweightChartComponent } from './components/tv-chart-renderer/tv-chart-renderer.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatIconModule } from '@angular/material/icon';
+import { SimulationEngineComponent } from './components/simulation-engine/simulation-engine.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     SimulationComponent,
     SimulationTableComponent,
     ChartModalContainerComponent,
-    TVLightweightChartComponent
+    TVLightweightChartComponent,
+    SimulationEngineComponent
   ],
   imports: [
     CommonModule,
     SimulationRoutingModule,
     AgGridModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   exports: [],
   providers: [FirebaseService, PolygonService],

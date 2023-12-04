@@ -4,3 +4,20 @@
 /* Quartz Theme Specific CSS */
 @import 'ag-grid-community/styles/ag-theme-quartz.css';
 @import '../src/app/simulation/components/simulation-table/simuation-table.styles';
+
+::-webkit-scrollbar {
+  width: 14px;
+  height: 13px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 50px;
+  border: 4px solid rgba(0,0,0,0);
+  background-clip: padding-box;
+  background-color: rgba(2,136,209,0.5);
+  height: 100%;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 13px;
+}

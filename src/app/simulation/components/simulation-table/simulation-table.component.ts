@@ -1,16 +1,20 @@
-import { Component, HostBinding, computed } from '@angular/core';
+import { Component, HostBinding, OnInit, computed } from '@angular/core';
 import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from '@app-data-upload/data-upload.model';
-import { DataUploadStore } from '@app-data-upload/stores/data-upload.store/data-upload.store';
+import { SimulationDataStore } from '@app-data-upload/stores/data-upload.store/data-upload.store';
+import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-config.store';
 import { avgPercentForTimeFrame, medianPercentForTimeFrame } from '@app-simulation/utils/calculations.utils';
 import { agGridColumnDefs } from '@app-simulation/utils/simulation-table-column.utils';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, RowClassParams } from 'ag-grid-community';
+import { filter } from 'rxjs';
 
+@UntilDestroy()
 @Component({
   selector: 'quant-sim-simulation-table',
   templateUrl: 'simulation-table.component.html',
   styleUrl: 'simulation-table.component.scss',
 })
-export class SimulationTableComponent {
+export class SimulationTableComponent implements OnInit {
 
   @HostBinding('class')
   className = 'quant-sim-simulation-table'
@@ -29,7 +33,15 @@ export class SimulationTableComponent {
     onFilterChanged: this.onFilterChanged.bind(this),
   }
 
-  constructor(private _store: DataUploadStore) {}
+  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
+
+  ngOnInit(): void {
+    this._store.runPnlCalculations(this.rowData() as IDataGapperUploadExtended[]);
+    this._configStore.simulationEngineConfig$.pipe(
+      filter(() => this.filteredRows().length > 0),
+      untilDestroyed(this)
+    ).subscribe(() => this._store.runPnlCalculations(this.filteredRows()));
+  }
 
   onGridReady(params: GridReadyEvent): void {
     this.gripApi = params.api;
@@ -52,6 +64,7 @@ export class SimulationTableComponent {
   onFilterChanged(evt: FilterChangedEvent): void {
     this.gripApi = evt.api;
     evt.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
+    this._store.runPnlCalculations(this.filteredRows());
   }
 
   filteredRows(): IDataGapperUploadExtended[] {

@@ -1,0 +1,69 @@
+<section class="top-section" [formGroup]="form">
+  <div class="equity-slippage-locate">
+    <div class="input-label">
+      <input type="number" formControlName="equity" class="equity" [min]="0" />
+      <label>Start Equity</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="slippage" class="slippage" [min]="0" />
+      <label>Slippage</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="locate" class="locate" [min]="0" />
+      <label>Locate</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="cappedRisk" [min]="0" />
+      <label>Capped Risk</label>
+    </div>
+    <div class="select-label">
+      <select class="timeframe-risk" formControlName="riskTimeFrame">
+        <option *ngFor="let option of timeFrameOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+      </select>
+      <label>Risk Timeframe</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="wiggle_room" class="wiggle-room" [min]="0" />
+      <label>Wiggle Room</label>
+    </div>
+  </div>
+  <div class="entry-1">
+    <label class="title">First entry</label>
+    <div class="entry-exit-controls">
+      <div class="input-label">
+        <input type="number" formControlName="first_entry_spike" class="entry-spike"/>
+        <label>Entry Spike</label>
+      </div>
+      <div class="input-label">
+        <input type="number" formControlName="first_risk" class="max-loss-risk" [min]="0" [max]="100"/>
+        <label>Max Loss Risk %</label>
+      </div>
+      <div class="input-label input-checkbox-label">
+        <input type="checkbox" formControlName="first_open_size" class="checkbox" />
+        <label>Open Size</label>
+      </div>
+    </div>
+  </div>
+  <div class="exit">
+    <label class="title">Exit</label>
+    <div class="exit-controls">
+      <div class="exit-close">
+        <div class="input-label">
+          <input type="number" formControlName="shares_exit_close" class="entry-lows" [min]="0" [max]="100" />
+          <label>% Shares Close</label>
+        </div>
+      </div>
+      <div class="exit-lows">
+        <div class="input-label">
+          <input type="number" formControlName="shares_exit_lows" class="entry-lows" [min]="0" [max]="100" />
+          <label>% Shares Lows</label>
+        </div>
+        <div class="input-label">
+          <input type="number" formControlName="exit_lows" class="entry-lows" />
+          <label>Exit Lows</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="bottom-section"></section>

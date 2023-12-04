@@ -1,0 +1,147 @@
+import { Component, OnInit } from "@angular/core";
+import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
+import { SimulationDataStore } from "@app-data-upload/stores/data-upload.store/data-upload.store";
+import { ISimulationEngineConfig } from "@app-simulation/simulation.model";
+import { simulationEngineConfigInitialState } from "@app-simulation/store/simulation-config.state";
+import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { map } from "rxjs";
+
+@UntilDestroy()
+@Component({
+  selector: 'simulation-engine',
+  templateUrl: 'simulation-engine.component.html',
+  styleUrl: 'simulation-engine.component.scss',
+})
+export class SimulationEngineComponent implements OnInit {
+
+  readonly timeFrameOptions = [
+    {value: 15, label: '9:45 a.m.'},
+    {value: 30, label: '10:00 a.m.'},
+    {value: 60, label: '10:30 a.m.'},
+    {value: 90, label: '11:00 a.m.'},
+    {value: 120, label: '11:30 a.m.'}
+  ]
+
+  readonly form = this._fb.group({
+    equity: [simulationEngineConfigInitialState.config.equity, Validators.required],
+    slippage: [simulationEngineConfigInitialState.config.slippage, Validators.required],
+    locate: [simulationEngineConfigInitialState.config.locate, Validators.required],
+    cappedRisk: [],
+    riskTimeFrame: [simulationEngineConfigInitialState.config.riskTimeFrame, Validators.required],
+    wiggle_room: [simulationEngineConfigInitialState.config.wiggle_room, Validators.required],
+    first_risk:[simulationEngineConfigInitialState.config.first_entry_spike, Validators.required],
+    first_entry_spike: [0, Validators.required],
+    first_open_size: [simulationEngineConfigInitialState.config.first_open_size, Validators.required],
+    exit_lows: [],
+    shares_exit_close: [simulationEngineConfigInitialState.config.shares_exit_close, Validators.required],
+    shares_exit_lows: [simulationEngineConfigInitialState.config.shares_exit_lows, Validators.required]
+  });
+
+  constructor(private _fb: FormBuilder, private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
+
+  ngOnInit(): void {
+    this._configStore.updateSimulationConfig(this.form.value as unknown as ISimulationEngineConfig);
+
+    this._updateExitLowPercentShareControl(this._percentSharesExitCloseControl().value);
+    this._updateExitLowControl(this._percentSharesExitLowControl().value);
+    this._updateExitClosePercentShareControl(this._percentSharesExitLowControl().value);
+    this._updateFirstEntrySpike(this._percentSharesExitLowControl().value);
+
+    this._firstSpikeEntryPercentControl().valueChanges.pipe(
+      untilDestroyed(this)
+    ).subscribe(data => {
+      if (data > 0) {
+        this._percentSharesExitCloseControl().patchValue(simulationEngineConfigInitialState.config.shares_exit_close, {emitEvent: false, onlySelf: true});
+        this._percentSharesExitCloseControl().disable({emitEvent: false, onlySelf: true});
+        this._percentSharesExitLowControl().patchValue(simulationEngineConfigInitialState.config.shares_exit_lows, {emitEvent: false, onlySelf: true});
+        this._percentSharesExitLowControl().disable({emitEvent: false, onlySelf: true});
+        this._exitLowsControl().reset(undefined, {emitEvent: false, onlySelf: true});
+        this._exitLowsControl().disable({emitEvent: false, onlySelf: true});
+      } else {
+        this._percentSharesExitCloseControl().enable({emitEvent: false, onlySelf: true});
+        this._percentSharesExitLowControl().enable({emitEvent: false, onlySelf: true});
+        this._exitLowsControl().enable({emitEvent: false, onlySelf: true});
+      }
+    })
+
+    this._percentSharesExitCloseControl()?.valueChanges.pipe(
+      untilDestroyed(this)
+    ).subscribe(data => {
+      this._updateExitLowPercentShareControl(data);
+      this._updateExitLowControl(this._percentSharesExitLowControl().value);
+    });
+
+    this._percentSharesExitLowControl()?.valueChanges.pipe(
+      untilDestroyed(this)
+    ).subscribe(data => {
+      this._updateFirstEntrySpike(data);
+      this._updateExitLowControl(data);
+      this._updateExitClosePercentShareControl(data);
+    });
+
+
+    this.form.valueChanges.pipe(
+      map(data => data as unknown as ISimulationEngineConfig),
+      untilDestroyed(this)
+    ).subscribe((config: ISimulationEngineConfig) => {
+      this._configStore.updateSimulationConfig(config);
+    })
+  }
+
+  private _updateFirstEntrySpike(exitLowsPercentShare: number) {
+    if (exitLowsPercentShare > 0) {
+      this._firstSpikeEntryPercentControl().setValue(0);
+      this._firstSpikeEntryPercentControl().disable();
+    } else {
+      this._firstSpikeEntryPercentControl().enable();
+    }
+  }
+
+  private _updateExitLowPercentShareControl(exitCloseValue: number): void {
+    if (exitCloseValue === 100) {
+      this._percentSharesExitLowControl().reset();
+      this._percentSharesExitLowControl().setValue(0, {emitEvent: false});
+    } else {
+      this._percentSharesExitLowControl().setValue(100 - exitCloseValue, {emitEvent: false});
+    }
+  }
+
+  private _updateExitClosePercentShareControl(exitLowValue: number): void {
+    if (exitLowValue === 100) {
+      this._percentSharesExitCloseControl().reset();
+      this._percentSharesExitCloseControl().setValue(0, {emitEvent: false});
+    } else {
+      this._percentSharesExitCloseControl().setValue(100 - exitLowValue, {emitEvent: false});
+    }
+  }
+
+  private _updateExitLowControl(exitLowShareValue: number): void {
+    if (exitLowShareValue > 0) {
+      if (!this._exitLowsControl().value) {
+        this._exitLowsControl().setValue(-10);
+      }
+      this._exitLowsControl().setValidators(Validators.required);
+      this._exitLowsControl().enable();
+    } else if(!exitLowShareValue) {
+      this._exitLowsControl().reset();
+      this._exitLowsControl().disable();
+    }
+  }
+
+  private _exitLowsControl(): AbstractControl<number> {
+    return this.form.get('exit_lows') as AbstractControl;
+  }
+
+  private _percentSharesExitCloseControl(): AbstractControl<number> {
+    return this.form.get('shares_exit_close') as AbstractControl;
+  }
+
+  private _percentSharesExitLowControl(): AbstractControl<number> {
+    return this.form.get('shares_exit_lows') as AbstractControl;
+  }
+
+  private _firstSpikeEntryPercentControl(): AbstractControl<number> {
+    return this.form.get('first_entry_spike') as AbstractControl;
+  }
+}

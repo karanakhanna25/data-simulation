@@ -1,0 +1,99 @@
+:host {
+  display: flex;
+  width: inherit;
+  height: inherit;
+  margin: 8px;
+}
+
+.top-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .equity-slippage-locate, .entry-exit-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .input-checkbox-label {
+    align-items: center;
+  }
+
+  .entry-1 {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    .entry-exit-controls {
+      display: flex;
+      flex-direction: row;
+      .max-loss-risk {
+        width: 80px;
+      }
+      .entry-spike {
+        width: 48px;
+      }
+    }
+  }
+
+
+  .exit {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    .exit-controls{
+      display: flex;
+      gap: 24px;
+      .exit-close, .exit-lows {
+        display: flex;
+        gap: 8px;
+      }
+    }
+  }
+
+  .title {
+    font-size: 16px;
+    color: grey;
+    font-weight: bold;
+  }
+
+  .input-label, .select-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .slippage, .locate, .wiggle-room {
+      width: 40px;
+    }
+
+    label {
+      font-size: 12px;
+      color: grey;
+    }
+  }
+
+  select {
+    height: 28px;
+    width: 120px;
+    border-radius: 4px;
+    border: 1px solid grey;
+  }
+
+  input {
+    height: 24px;
+    width: 60px;
+    border-radius: 4px;
+    border: 1px solid grey;
+  }
+
+  .checkbox {
+    height: 22px;
+  }
+
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
