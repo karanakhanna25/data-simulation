@@ -10,5 +10,6 @@ export interface ISimulationEngineConfig {
   first_open_size: boolean,
   exit_lows?: number,
   shares_exit_close: number,
-  shares_exit_lows: number
+  shares_exit_lows: number,
+  spike_percent_risk: number,
 }

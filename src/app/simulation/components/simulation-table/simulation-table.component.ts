@@ -36,7 +36,6 @@ export class SimulationTableComponent implements OnInit {
   constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
 
   ngOnInit(): void {
-    this._store.runPnlCalculations(this.rowData() as IDataGapperUploadExtended[]);
     this._configStore.simulationEngineConfig$.pipe(
       filter(() => this.filteredRows().length > 0),
       untilDestroyed(this)
@@ -46,6 +45,7 @@ export class SimulationTableComponent implements OnInit {
   onGridReady(params: GridReadyEvent): void {
     this.gripApi = params.api;
     params.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
+    this._store.runPnlCalculations(this.filteredRows());
   }
 
   getRowClass(data: RowClassParams): string {

@@ -14,6 +14,7 @@ import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatIconModule } from '@angular/material/icon';
 import { SimulationEngineComponent } from './components/simulation-engine/simulation-engine.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChartModule } from '../charts/chart.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatSidenavModule,
     MatIconModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartModule
   ],
   exports: [],
   providers: [FirebaseService, PolygonService],

@@ -16,6 +16,7 @@ export const simulationEngineConfigInitialState = {
     first_open_size: false,
     shares_exit_close: 100,
     shares_exit_lows: 0,
-    wiggle_room: 3
+    wiggle_room: 3,
+    spike_percent_risk: 55
   }
 }

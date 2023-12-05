@@ -50,7 +50,6 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields['Closed Status'],
       cellRenderer: ClosedStatusComponent ,
       cellClass: 'center-align',
-
       filter: ClosedStatusFilter,
       width: 120
     },
@@ -60,7 +59,6 @@ export function agGridColumnDefs(): ColDef[] {
       filter: true,
       cellRendererSelector: tickerCellRenderer,
       cellClass: 'center-align',
-
       width: 120
     },
     {
@@ -366,6 +364,20 @@ export function agGridColumnDefs(): ColDef[] {
 
       width: 140,
       tooltipField: IDataGapperUploadExtendedFields.Sector
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Profit/Loss'],
+      field: IDataGapperUploadExtendedFields['Profit/Loss'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 140
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields.Equity,
+      field: IDataGapperUploadExtendedFields.Equity,
+      filter: false,
+      cellClass: 'center-align',
+      width: 140
     },
 
 ]

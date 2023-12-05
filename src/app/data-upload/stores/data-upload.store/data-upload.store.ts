@@ -17,6 +17,8 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green'
   })));
 
+  readonly equity = this.selectSignal(state => state.visibleRows.map(g => g.Equity));
+
   readonly config = this._configStore.simulationEngineConfig;
 
   readonly allIndustries = this.selectSignal(state => uniq(state.gus.map(g => g.Industry)));
@@ -25,6 +27,11 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   readonly updateGusRecords = this.updater((state, gus: IDataGapperUploadExtended[]) => ({
     ...state,
     gus
+  }))
+
+  readonly setVisibleRows = this.updater((state, visibleRows: IDataGapperUploadExtended[]) => ({
+    ...state,
+    visibleRows
   }))
 
   constructor(private _firebaseService: FirebaseService, private _configStore: SimulationEngineConfigStore) {
@@ -42,7 +49,10 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   readonly runPnlCalculations = this.effect((trigger$: Observable<IDataGapperUploadExtended[]>) =>
     trigger$.pipe(
     map(data => calculatePnl(this.config(), data)),
-      tap(data => this.updateGusRecords(this._mergeRecords(this.gusData() as IDataGapperUploadExtended[], data)))
+      tap(data => {
+        this.setVisibleRows(data);
+        this.updateGusRecords(this._mergeRecords(this.gusData() as IDataGapperUploadExtended[], data));
+      })
     )
   )
 

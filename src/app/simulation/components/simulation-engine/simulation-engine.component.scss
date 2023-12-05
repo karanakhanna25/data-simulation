@@ -1,8 +1,9 @@
 :host {
   display: flex;
-  width: inherit;
   height: inherit;
   margin: 8px;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .top-section {

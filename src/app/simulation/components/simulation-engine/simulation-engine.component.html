@@ -26,6 +26,10 @@
       <input type="number" formControlName="wiggle_room" class="wiggle-room" [min]="0" />
       <label>Wiggle Room</label>
     </div>
+    <div class="input-label">
+      <input type="number" formControlName="spike_percent_risk" class="wiggle-room" [min]="0" />
+      <label>Max spike% Risk</label>
+    </div>
   </div>
   <div class="entry-1">
     <label class="title">First entry</label>
@@ -66,4 +70,6 @@
     </div>
   </div>
 </section>
-<section class="bottom-section"></section>
+<section class="bottom-section">
+  <line-chart [data]="portfolio_equity()" #lineChart></line-chart>
+</section>

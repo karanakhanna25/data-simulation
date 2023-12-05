@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { SimulationDataStore } from "@app-data-upload/stores/data-upload.store/data-upload.store";
 import { ISimulationEngineConfig } from "@app-simulation/simulation.model";
@@ -6,6 +6,7 @@ import { simulationEngineConfigInitialState } from "@app-simulation/store/simula
 import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { map } from "rxjs";
+import { LineChartComponent } from "src/app/charts/line-chart/line-chart.component";
 
 @UntilDestroy()
 @Component({
@@ -14,6 +15,11 @@ import { map } from "rxjs";
   styleUrl: 'simulation-engine.component.scss',
 })
 export class SimulationEngineComponent implements OnInit {
+
+  @ViewChild('lineChart')
+  lineChart!: LineChartComponent;
+
+  equity = this._store.equity;
 
   readonly timeFrameOptions = [
     {value: 15, label: '9:45 a.m.'},
@@ -30,7 +36,8 @@ export class SimulationEngineComponent implements OnInit {
     cappedRisk: [],
     riskTimeFrame: [simulationEngineConfigInitialState.config.riskTimeFrame, Validators.required],
     wiggle_room: [simulationEngineConfigInitialState.config.wiggle_room, Validators.required],
-    first_risk:[simulationEngineConfigInitialState.config.first_entry_spike, Validators.required],
+    spike_percent_risk: [simulationEngineConfigInitialState.config.spike_percent_risk, Validators.required],
+    first_risk:[simulationEngineConfigInitialState.config.first_risk, Validators.required],
     first_entry_spike: [0, Validators.required],
     first_open_size: [simulationEngineConfigInitialState.config.first_open_size, Validators.required],
     exit_lows: [],
@@ -41,29 +48,15 @@ export class SimulationEngineComponent implements OnInit {
   constructor(private _fb: FormBuilder, private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
 
   ngOnInit(): void {
+    setTimeout(() => {
+      this.lineChart.drawChart(this.portfolio_equity() || []);
+    },200);
     this._configStore.updateSimulationConfig(this.form.value as unknown as ISimulationEngineConfig);
 
     this._updateExitLowPercentShareControl(this._percentSharesExitCloseControl().value);
     this._updateExitLowControl(this._percentSharesExitLowControl().value);
     this._updateExitClosePercentShareControl(this._percentSharesExitLowControl().value);
     this._updateFirstEntrySpike(this._percentSharesExitLowControl().value);
-
-    this._firstSpikeEntryPercentControl().valueChanges.pipe(
-      untilDestroyed(this)
-    ).subscribe(data => {
-      if (data > 0) {
-        this._percentSharesExitCloseControl().patchValue(simulationEngineConfigInitialState.config.shares_exit_close, {emitEvent: false, onlySelf: true});
-        this._percentSharesExitCloseControl().disable({emitEvent: false, onlySelf: true});
-        this._percentSharesExitLowControl().patchValue(simulationEngineConfigInitialState.config.shares_exit_lows, {emitEvent: false, onlySelf: true});
-        this._percentSharesExitLowControl().disable({emitEvent: false, onlySelf: true});
-        this._exitLowsControl().reset(undefined, {emitEvent: false, onlySelf: true});
-        this._exitLowsControl().disable({emitEvent: false, onlySelf: true});
-      } else {
-        this._percentSharesExitCloseControl().enable({emitEvent: false, onlySelf: true});
-        this._percentSharesExitLowControl().enable({emitEvent: false, onlySelf: true});
-        this._exitLowsControl().enable({emitEvent: false, onlySelf: true});
-      }
-    })
 
     this._percentSharesExitCloseControl()?.valueChanges.pipe(
       untilDestroyed(this)
@@ -143,5 +136,9 @@ export class SimulationEngineComponent implements OnInit {
 
   private _firstSpikeEntryPercentControl(): AbstractControl<number> {
     return this.form.get('first_entry_spike') as AbstractControl;
+  }
+
+  portfolio_equity(): number[] {
+    return this.equity() as number[];
   }
 }

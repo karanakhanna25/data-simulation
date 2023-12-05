@@ -45,7 +45,7 @@ export interface IDataGapperUploadExtended extends IDataGapper {
   'pmh-open%'?: number;
   'Closed Status'?: 'Closed Red' | 'Closed Green';
   'Profit/Loss'?: number;
-  'equity'?: number;
+  'Equity'?: number;
 }
 
 export enum IDataGapperUploadExtendedFields {
