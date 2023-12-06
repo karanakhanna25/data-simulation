@@ -104,7 +104,8 @@ function calculateTotalShares(entryPrice: number | undefined, equity: number, co
     const riskPrice = Number((open + (open * (config.spike_percent_risk/100))).toFixed(2));
     const portfolioEquity = equity;
     const dollarRisk = Number((portfolioEquity * (config.first_risk/100)).toFixed(0));
-    return Number((dollarRisk/(riskPrice-entryPrice)).toFixed(0));
+    const newEntryPrice = config.first_open_size ? data["Day 1 Open"] : entryPrice;
+    return Number((dollarRisk/(riskPrice-newEntryPrice)).toFixed(0));
   }
   return 0;
 }

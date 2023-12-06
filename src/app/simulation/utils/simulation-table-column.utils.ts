@@ -46,7 +46,7 @@ function tickerCellRenderer(params: ICellRendererParams): CellRendererSelectorRe
 export function agGridColumnDefs(): ColDef[] {
   return [
     {
-      headerName: IDataGapperUploadExtendedFields['Closed Status'],
+      headerName: 'Status',
       field: IDataGapperUploadExtendedFields['Closed Status'],
       cellRenderer: ClosedStatusComponent ,
       cellClass: 'center-align',
