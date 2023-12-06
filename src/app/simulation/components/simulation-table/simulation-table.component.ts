@@ -57,7 +57,7 @@ export class SimulationTableComponent implements OnInit {
         const headers = jsonData[0] as string[];
         const data = this._mapToFields(jsonData.slice(1).reduce((acc: any, row: any) => {
           const rowObj = (row || []).reduce((obj: any, cell: any, index: number) => {
-            obj[headers[index]] = cell;
+            obj[headers[index]] = this._convertToNumber(cell);
             return obj;
           }, {});
           acc.push(rowObj);
@@ -83,6 +83,11 @@ export class SimulationTableComponent implements OnInit {
         return obj;
       }, {})
     })
+  }
+
+  private _convertToNumber(value: any): any {
+    const num = Number(value);
+    return Number.isNaN(num) ? value : num;
   }
 
   onGridReady(params: GridReadyEvent): void {

@@ -5,6 +5,7 @@ import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 import { SimulationDataStore } from "@app-simulation/store/data-upload.store";
 import { IFilterAngularComp } from "ag-grid-angular";
 import { IDoesFilterPassParams, IFilterParams } from "ag-grid-community";
+import { uniq } from "lodash";
 
 @Component({
   selector: 'sector-filter',
@@ -25,7 +26,7 @@ export class IndustryFilter implements IFilterAngularComp {
   public visibleFilterOptions: {selected: boolean, label: string}[] = [];
   industries = this._store.allIndustries;
 
-  filterOptions: Signal<{selected: boolean, label: string}[]> = computed(() => this.industries().map(i => ({selected: false, label: i})))
+  filterOptions: Signal<{selected: boolean, label: string}[]> = computed(() => this.industries().map(i => ({selected: true, label: i})))
 
   constructor(private _store: SimulationDataStore) {}
 
@@ -41,13 +42,25 @@ onSearchChange(): void {
   );
 }
 
+filteredRows(): IDataGapperUploadExtended[] {
+  const rowData: IDataGapperUploadExtended[] = [];
+  this.params.api?.forEachNode((node) => {
+    if (node.displayed) {
+      rowData.push(node.data);
+    }
+  })
+  return rowData;
+}
+
 isFilterActive(): boolean {
-    return this.filterOptions().some(option => option.selected);
+    return this.visibleFilterOptions.some(option => option.selected);
 }
 
 doesFilterPass(params: IDoesFilterPassParams): boolean {
    const data = params.data as IDataGapperUploadExtended;
-    return this.filterOptions().some(option => option.selected && data.Industry === option.label);
+    return this.visibleFilterOptions.some(option => {
+      return option.selected && data.Industry === option.label
+    });
 }
 
 onCheckboxChange(): void {

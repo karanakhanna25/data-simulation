@@ -25,7 +25,7 @@ export class SectorFilter implements IFilterAngularComp {
   public visibleFilterOptions: {selected: boolean, label: string}[] = [];
   sectors = this._store.allSectors;
 
-  filterOptions: Signal<{selected: boolean, label: string}[]> = computed(() => this.sectors().map(i => ({selected: false, label: i})))
+  filterOptions: Signal<{selected: boolean, label: string}[]> = computed(() => this.sectors().map(i => ({selected: true, label: i})))
 
   constructor(private _store: SimulationDataStore) {}
 
@@ -42,12 +42,12 @@ export class SectorFilter implements IFilterAngularComp {
   }
 
   isFilterActive(): boolean {
-      return this.filterOptions().some(option => option.selected);
+      return this.visibleFilterOptions.some(option => option.selected);
   }
 
   doesFilterPass(params: IDoesFilterPassParams): boolean {
      const data = params.data as IDataGapperUploadExtended;
-      return this.filterOptions().some(option => option.selected && data.Sector === option.label);
+      return this.visibleFilterOptions.some(option => option.selected && data.Sector === option.label);
   }
 
   onCheckboxChange(): void {

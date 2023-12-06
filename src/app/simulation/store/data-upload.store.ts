@@ -44,8 +44,8 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
         allRecords, data, context
       }))).pipe(
         switchMap(({data, allRecords, context}) => {
-          const contextData = (allRecords[context as keyof typeof allRecords] || []) as IDataGapperUploadExtended[];
-          const mergedContextData = contextData.length ? this._mergeRecords(contextData, data) : data;
+          const contextData = ((allRecords || {})[context as keyof typeof allRecords] || []) as IDataGapperUploadExtended[];
+          const mergedContextData = contextData.length ? this._mergeRecords(contextData, data, 'append') : data;
           const newRecord = {
             [context]: mergedContextData
           };
@@ -63,7 +63,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     map(data => calculatePnl(this.config(), data)),
       tap(data => {
         this.setVisibleRows(data);
-        this.updateGUSRecords(this._mergeRecords(this.gusData() as IDataGapperUploadExtended[], data));
+        this.updateGUSRecords(this._mergeRecords(this.gusData() as IDataGapperUploadExtended[], data, 'update'));
       })
     )
   )
@@ -79,17 +79,21 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   )
 
   private _calculateDistanceOpenPmh(open: number, pmh: number): number {
-    return Number(((open-pmh)/open*100).toFixed(2));
+    return Number(((pmh-open)/open*100).toFixed(2));
   }
 
-  private _mergeRecords(allRecords: IDataGapperUploadExtended[], subRecords: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
-    return (allRecords || []).map(d => {
-      const record = subRecords.find(s => s.id === d.id);
-      if (record?.id) {
-        return record
-      }
-      return d;
-    })
+  private _mergeRecords(allRecords: IDataGapperUploadExtended[], newRecords: IDataGapperUploadExtended[], type:'append' | 'update'): IDataGapperUploadExtended[] {
+    if (type === 'append') {
+      return [...allRecords, ...newRecords];
+    } else {
+      return (allRecords || []).map(d => {
+        const record = newRecords.find(s => s.id === d.id);
+        if (record?.id) {
+          return record
+        }
+        return d;
+      })
+    }
   }
 
 }

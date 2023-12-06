@@ -14,7 +14,7 @@ export class SimulationComponent {
   constructor(private _store: SimulationDataStore) {}
 
   ngOnInit(): void {
-    this._store.loadGUSData('gus1')
+    this._store.loadGUSData('gus')
    }
 
 }
