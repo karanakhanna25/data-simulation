@@ -11,13 +11,13 @@ import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
-  readonly gusData = this.selectSignal(state => state.gus.map(g => ({
+  readonly gusData = this.selectSignal(state => (state.gus || []).map(g => ({
     ...g,
     "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
     "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green'
   })));
 
-  readonly equity = this.selectSignal(state => state.visibleRows.map(g => g.Equity));
+  readonly equity = this.selectSignal(state => [...[this._configStore.simulationEngineConfig().equity], ...state.visibleRows.map(g => g.Equity)]);
 
   readonly config = this._configStore.simulationEngineConfig;
 
@@ -38,14 +38,14 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     super(dataUploadInitialState)
   }
 
-  readonly uploadGusData = this.effect((trigger$: Observable<{data: IDataGapperUploadExtended[], context: string}>) =>
+  readonly uploadGusData = this.effect((trigger$: Observable<{data: IDataGapperUploadExtended[], context: string, type: 'append' | 'update' | 'replace'}>) =>
     trigger$.pipe(
-      switchMap(({data, context}) => this._firebaseService.retrieveRecords().pipe(map((allRecords) => ({
-        allRecords, data, context
+      switchMap(({data, context, type}) => this._firebaseService.retrieveRecords().pipe(map((allRecords) => ({
+        allRecords, data, context, type
       }))).pipe(
-        switchMap(({data, allRecords, context}) => {
+        switchMap(({data, allRecords, context, type}) => {
           const contextData = ((allRecords || {})[context as keyof typeof allRecords] || []) as IDataGapperUploadExtended[];
-          const mergedContextData = contextData.length ? this._mergeRecords(contextData, data, 'append') : data;
+          const mergedContextData = contextData.length ? this._mergeRecords(contextData, data, type) : data;
           const newRecord = {
             [context]: mergedContextData
           };
@@ -82,10 +82,10 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     return Number(((pmh-open)/open*100).toFixed(2));
   }
 
-  private _mergeRecords(allRecords: IDataGapperUploadExtended[], newRecords: IDataGapperUploadExtended[], type:'append' | 'update'): IDataGapperUploadExtended[] {
+  private _mergeRecords(allRecords: IDataGapperUploadExtended[], newRecords: IDataGapperUploadExtended[], type:'append' | 'update' | 'replace'): IDataGapperUploadExtended[] {
     if (type === 'append') {
       return [...allRecords, ...newRecords];
-    } else {
+    } else if(type === 'update') {
       return (allRecords || []).map(d => {
         const record = newRecords.find(s => s.id === d.id);
         if (record?.id) {
@@ -93,6 +93,8 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
         }
         return d;
       })
+    } else {
+      return newRecords;
     }
   }
 

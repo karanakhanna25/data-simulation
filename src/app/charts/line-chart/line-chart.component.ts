@@ -19,7 +19,6 @@ export class LineChartComponent {
 
   @Input()
   set data(data: number[] | undefined[]) {
-    console.log(data);
     this.lineData = data as number[];
     this.drawChart(data as number[]);
   }

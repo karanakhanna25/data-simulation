@@ -2,7 +2,6 @@ import { IDataGapperUploadExtended, ISimulationEngineConfig } from "@app-simulat
 
 export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
   const globalEquity = [config.equity];
-  console.log(data, config);
  return data.map((d, i) => {
     const firstEntryPrice = calculateFirstEntry(config, d);
     const timeFrameRiskPrice = getRiskTimeFrameHighValue(config.riskTimeFrame, d);

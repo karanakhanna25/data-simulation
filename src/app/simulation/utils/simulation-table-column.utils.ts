@@ -25,7 +25,7 @@ function pinnedRowValueFormatter(params: ValueFormatterParams): string {
 
 function numberFormatter(params: ValueFormatterParams): string {
   if (params.value) {
-    return (params.value as number).toFixed(2)
+    return Number((params.value as number).toFixed(2)).toLocaleString()
   }
   return ''
 
@@ -102,7 +102,8 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields['Day 1 PM Vol'],
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
-      width: 140
+      width: 140,
+      valueFormatter: numberFormatter
     },
     {
       headerName: IDataGapperUploadExtendedFields['Day 1 Gap %'],
@@ -346,7 +347,7 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields.Float,
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
-
+      valueFormatter: numberFormatter,
       width: 130
     },
     {
@@ -370,14 +371,16 @@ export function agGridColumnDefs(): ColDef[] {
       field: IDataGapperUploadExtendedFields['Profit/Loss'],
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
-      width: 140
+      width: 140,
+      valueFormatter: numberFormatter
     },
     {
       headerName: IDataGapperUploadExtendedFields.Equity,
       field: IDataGapperUploadExtendedFields.Equity,
       filter: false,
       cellClass: 'center-align',
-      width: 140
+      width: 140,
+      valueFormatter: numberFormatter
     },
 
 ]

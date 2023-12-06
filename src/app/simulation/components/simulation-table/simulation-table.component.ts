@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, HostBinding, OnInit, computed } from '@angular/core';
 import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from '@app-simulation/simulation.model';
 import { SimulationDataStore } from '@app-simulation/store/data-upload.store';
@@ -5,7 +6,7 @@ import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-co
 import { avgPercentForTimeFrame, medianPercentForTimeFrame } from '@app-simulation/utils/calculations.utils';
 import { agGridColumnDefs } from '@app-simulation/utils/simulation-table-column.utils';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, RowClassParams } from 'ag-grid-community';
+import { FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, RowClassParams, SortChangedEvent } from 'ag-grid-community';
 import { filter } from 'rxjs';
 import * as XLSX from 'xlsx';
 
@@ -32,6 +33,7 @@ export class SimulationTableComponent implements OnInit {
     animateRows: true,
     getRowClass: this.getRowClass.bind(this),
     onFilterChanged: this.onFilterChanged.bind(this),
+    onSortChanged: this.onSortChanged.bind(this)
   }
 
   constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
@@ -62,10 +64,12 @@ export class SimulationTableComponent implements OnInit {
           }, {});
           acc.push(rowObj);
           return acc;
-        }, []) as IDataGapperUploadExtended[]).map(d => ({...d, ["Day 1 Date"]: new Date(d['Day 1 Date']) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
+        }, []) as IDataGapperUploadExtended[]).map(d => ({...d,
+            ["Day 1 Date"]: new Date(formatDate(d['Day 1 Date'], 'MM-dd-yyyy', 'en-US')) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
         this._store.uploadGusData({
           data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
-          context: 'gus'
+          context: 'gus',
+          type: 'replace'
         });
       }
     }
@@ -114,6 +118,11 @@ export class SimulationTableComponent implements OnInit {
   onFilterChanged(evt: FilterChangedEvent): void {
     this.gripApi = evt.api;
     evt.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
+    this._store.runPnlCalculations(this.filteredRows());
+  }
+
+  onSortChanged(evt: SortChangedEvent): void {
+    this.gripApi = evt.api;
     this._store.runPnlCalculations(this.filteredRows());
   }
 

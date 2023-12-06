@@ -1,8 +1,7 @@
 import { CommonModule } from "@angular/common";
-import { Component, Signal, computed } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
-import { SimulationDataStore } from "@app-simulation/store/data-upload.store";
 import { IFilterAngularComp } from "ag-grid-angular";
 import { IDoesFilterPassParams, IFilterParams } from "ag-grid-community";
 import { uniq } from "lodash";
@@ -10,7 +9,10 @@ import { uniq } from "lodash";
 @Component({
   selector: 'sector-filter',
   template: `
-    <input type="text" [(ngModel)]="searchText" (input)="onSearchChange()" placeholder="Search...">
+    <div class="search-select">
+      <input type="checkbox" [(ngModel)]="selectAll" (change)="onSelectAll()">
+      <input type="text" [(ngModel)]="searchText" (input)="onSearchChange()" placeholder="Search...">
+    </div>
     <div *ngFor="let item of visibleFilterOptions" class="options">
             <input type="checkbox" [(ngModel)]="item.selected" (change)="onCheckboxChange()">
             {{item.label}}
@@ -23,55 +25,69 @@ import { uniq } from "lodash";
 export class IndustryFilter implements IFilterAngularComp {
   params!: IFilterParams;
   public searchText: string = '';
+  selectAll: boolean = true;
   public visibleFilterOptions: {selected: boolean, label: string}[] = [];
-  industries = this._store.allIndustries;
 
-  filterOptions: Signal<{selected: boolean, label: string}[]> = computed(() => this.industries().map(i => ({selected: true, label: i})))
-
-  constructor(private _store: SimulationDataStore) {}
+  constructor() {}
 
   agInit(params: IFilterParams): void {
     this.params = params;
     // Initialize filterOptions here based on params
-    this.visibleFilterOptions = this.filterOptions();
-}
+    this.visibleFilterOptions = this.allIndustries();
+  }
 
-onSearchChange(): void {
-  this.visibleFilterOptions = this.filterOptions().filter(option =>
-      option.label.toLowerCase().includes(this.searchText.toLowerCase())
-  );
-}
+  onSearchChange(): void {
+    this.visibleFilterOptions = this.allIndustries().filter(option =>
+        option.label.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
 
-filteredRows(): IDataGapperUploadExtended[] {
-  const rowData: IDataGapperUploadExtended[] = [];
-  this.params.api?.forEachNode((node) => {
-    if (node.displayed) {
-      rowData.push(node.data);
-    }
-  })
-  return rowData;
-}
+  onSelectAll(): void {
+    this.visibleFilterOptions.forEach(f => f.selected = this.selectAll);
+    this.onCheckboxChange(); // Apply filter changes immediately
+  }
 
-isFilterActive(): boolean {
-    return this.visibleFilterOptions.some(option => option.selected);
-}
+  filteredRows(): IDataGapperUploadExtended[] {
+    const rowData: IDataGapperUploadExtended[] = [];
+    this.params.api?.forEachNode((node) => {
+      if (node.displayed) {
+        rowData.push(node.data);
+      }
+    })
+    return rowData;
+  }
 
-doesFilterPass(params: IDoesFilterPassParams): boolean {
-   const data = params.data as IDataGapperUploadExtended;
-    return this.visibleFilterOptions.some(option => {
-      return option.selected && data.Industry === option.label
-    });
-}
+  allIndustries(): {selected: boolean, label: string}[] {
+    return uniq(this.filteredRows().map(r => r.Industry).filter(r => !!r?.length)).map(i => ({selected: true, label: i}));
+  }
 
-onCheckboxChange(): void {
+  isFilterActive(): boolean {
+      return true;
+  }
+
+  doesFilterPass(params: IDoesFilterPassParams): boolean {
+     const data = params.data as IDataGapperUploadExtended;
+      return this.visibleFilterOptions.some(option => {
+        if (this.everyVisibleFilterDesected()) {
+          return false;
+        }
+        return option.selected && data.Industry === option.label
+      });
+  }
+
+  onCheckboxChange(): void {
     this.params.filterChangedCallback();
-}
+  }
 
-getModel(): any {
-    // Return a model representing the current filter state
-}
+  getModel(): any {
+    return this.visibleFilterOptions.filter(f => f.selected).map(f => f.label);
+  }
 
-setModel(model: any): void {
-    // Set the filter state based on the model
-}
+  setModel(model: any): void {
+    this.visibleFilterOptions.forEach(f => f.selected = model.includes(f.label));
+  }
+
+  everyVisibleFilterDesected(): boolean {
+    return this.visibleFilterOptions.every(f => !f.selected);
+  }
 }
