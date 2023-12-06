@@ -1,5 +1,4 @@
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
-import { ISimulationEngineConfig } from "@app-simulation/simulation.model";
+import { IDataGapperUploadExtended, ISimulationEngineConfig } from "@app-simulation/simulation.model";
 
 export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
   const globalEquity = [config.equity];

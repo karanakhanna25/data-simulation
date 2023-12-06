@@ -1,12 +1,13 @@
 import { Component, HostBinding, OnInit, computed } from '@angular/core';
-import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from '@app-data-upload/data-upload.model';
-import { SimulationDataStore } from '@app-data-upload/stores/data-upload.store/data-upload.store';
+import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from '@app-simulation/simulation.model';
+import { SimulationDataStore } from '@app-simulation/store/data-upload.store';
 import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-config.store';
 import { avgPercentForTimeFrame, medianPercentForTimeFrame } from '@app-simulation/utils/calculations.utils';
 import { agGridColumnDefs } from '@app-simulation/utils/simulation-table-column.utils';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, RowClassParams } from 'ag-grid-community';
 import { filter } from 'rxjs';
+import * as XLSX from 'xlsx';
 
 @UntilDestroy()
 @Component({
@@ -42,10 +43,54 @@ export class SimulationTableComponent implements OnInit {
     ).subscribe(() => this._store.runPnlCalculations(this.filteredRows()));
   }
 
+  onFileChanged(evt: Event): void {
+    const target: DataTransfer = evt.target as unknown as DataTransfer;
+    if (target.files.length !== 1) throw new Error('Upload One file at a time');
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      const bstr: string = e.target.result;
+      const workbook: XLSX.WorkBook = XLSX.read(bstr, {type: 'binary', cellDates: true});
+      const sheetName = (workbook.SheetNames || [])[0] || undefined;
+      if (sheetName) {
+        const worksheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+        const headers = jsonData[0] as string[];
+        const data = this._mapToFields(jsonData.slice(1).reduce((acc: any, row: any) => {
+          const rowObj = (row || []).reduce((obj: any, cell: any, index: number) => {
+            obj[headers[index]] = cell;
+            return obj;
+          }, {});
+          acc.push(rowObj);
+          return acc;
+        }, []) as IDataGapperUploadExtended[]).map(d => ({...d, ["Day 1 Date"]: new Date(d['Day 1 Date']) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
+        this._store.uploadGusData({
+          data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
+          context: 'gus'
+        });
+      }
+    }
+    reader.readAsBinaryString(target.files[0]);
+  }
+
+  private _mapToFields(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
+    const fields = Object.keys(IDataGapperUploadExtendedFields);
+    return data.map(d => {
+      const dataKeys = Object.keys(d);
+      return dataKeys.reduce((obj: any, key: string) => {
+        if (fields.includes(key)) {
+          obj[key] = d[key as keyof typeof d];
+        }
+        return obj;
+      }, {})
+    })
+  }
+
   onGridReady(params: GridReadyEvent): void {
     this.gripApi = params.api;
     params.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
-    this._store.runPnlCalculations(this.filteredRows());
+    setTimeout(() => {
+      this._store.runPnlCalculations(this.filteredRows());
+    }, 200)
   }
 
   getRowClass(data: RowClassParams): string {

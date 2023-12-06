@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
 import { Observable } from "rxjs";
 import { IPolygonMinuteData } from "./polygon.model";
 

@@ -1,12 +1,12 @@
-import { Inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { ComponentStore } from "@ngrx/component-store";
 import { dataUploadInitialState, IDataUploadSate as ISimulationDataState } from "./data-upload.state";
-import { map, Observable, switchMap, tap, withLatestFrom } from "rxjs";
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
+import { map, Observable, switchMap, tap } from "rxjs";
 import {uniq} from 'lodash';
-import { FirebaseService } from "@app-data-upload/services/firebase.service";
+import { FirebaseService } from "@app-simulation/services/firebase.service";
 import { calculatePnl } from "@app-simulation/utils/pnl-calculations.utils";
 import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";
+import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
@@ -24,7 +24,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   readonly allIndustries = this.selectSignal(state => uniq(state.gus.map(g => g.Industry)));
   readonly allSectors = this.selectSignal(state => uniq(state.gus.map(g => g.Sector)));
 
-  readonly updateGusRecords = this.updater((state, gus: IDataGapperUploadExtended[]) => ({
+  readonly updateGUSRecords = this.updater((state,  gus: IDataGapperUploadExtended[]) => ({
     ...state,
     gus
   }))
@@ -38,10 +38,22 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     super(dataUploadInitialState)
   }
 
-  readonly uploadGusData = this.effect((trigger$: Observable<IDataGapperUploadExtended[]>) =>
+  readonly uploadGusData = this.effect((trigger$: Observable<{data: IDataGapperUploadExtended[], context: string}>) =>
     trigger$.pipe(
-      switchMap(data => this._firebaseService.addGUSRecords(data).pipe(
-        tap((data) => this.updateGusRecords(data))
+      switchMap(({data, context}) => this._firebaseService.retrieveRecords().pipe(map((allRecords) => ({
+        allRecords, data, context
+      }))).pipe(
+        switchMap(({data, allRecords, context}) => {
+          const contextData = (allRecords[context as keyof typeof allRecords] || []) as IDataGapperUploadExtended[];
+          const mergedContextData = contextData.length ? this._mergeRecords(contextData, data) : data;
+          const newRecord = {
+            [context]: mergedContextData
+          };
+          const allData = {...allRecords, ...newRecord};
+          return  this._firebaseService.addStrategyRecords(allData).pipe(
+            tap((data) => this.updateGUSRecords(data))
+          )
+        }),
       )),
     )
   )
@@ -51,15 +63,17 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     map(data => calculatePnl(this.config(), data)),
       tap(data => {
         this.setVisibleRows(data);
-        this.updateGusRecords(this._mergeRecords(this.gusData() as IDataGapperUploadExtended[], data));
+        this.updateGUSRecords(this._mergeRecords(this.gusData() as IDataGapperUploadExtended[], data));
       })
     )
   )
 
-  readonly loadData = this.effect((trigger$: Observable<void>) =>
+  readonly loadGUSData = this.effect((trigger$: Observable<string>) =>
     trigger$.pipe(
-      switchMap(() => this._firebaseService.retrieveGUSRecords().pipe(
-        tap(data => this.updateGusRecords(data))
+      switchMap((context) => this._firebaseService.retrieveRecords().pipe(
+        tap(data => {
+          this.updateGUSRecords(data[context]);
+        })
       )),
     )
   )
@@ -69,7 +83,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   }
 
   private _mergeRecords(allRecords: IDataGapperUploadExtended[], subRecords: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
-    return allRecords.map(d => {
+    return (allRecords || []).map(d => {
       const record = subRecords.find(s => s.id === d.id);
       if (record?.id) {
         return record

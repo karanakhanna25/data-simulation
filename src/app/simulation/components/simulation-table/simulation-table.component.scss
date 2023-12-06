@@ -8,11 +8,27 @@
 
 .ag-theme-quartz {
   height: calc(100vh - 130px);
-  margin-right: 32px;
 }
 
 .stats {
   display: flex;
   gap: 24px;
   flex-wrap: wrap;
+}
+
+.top-section {
+  display: flex;
+}
+
+.upload-file {
+  display: none;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-icon {
+  cursor: pointer;
 }

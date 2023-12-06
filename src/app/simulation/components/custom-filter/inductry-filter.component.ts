@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, Signal, computed } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
-import { SimulationDataStore } from "@app-data-upload/stores/data-upload.store/data-upload.store";
+import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
+import { SimulationDataStore } from "@app-simulation/store/data-upload.store";
 import { IFilterAngularComp } from "ag-grid-angular";
 import { IDoesFilterPassParams, IFilterParams } from "ag-grid-community";
 

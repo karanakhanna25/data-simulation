@@ -1,24 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { SimulationDataStore } from '@app-data-upload/stores/data-upload.store/data-upload.store';
+import { SimulationDataStore } from '@app-simulation/store/data-upload.store';
 import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-config.store';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [SimulationDataStore, SimulationEngineConfigStore]
+  providers: []
 })
-export class AppComponent implements OnInit {
+export class AppComponent  {
 
   navLinks = [
-    { path: 'data-upload', label: 'Data Upload' },
-    { path: '/simulation', label: 'Simulation' },
+    { path: '/simulation-gus', label: 'Simulation - GUS' },
   ];
 
-  constructor(private _store: SimulationDataStore) {}
+  constructor() {}
 
-  ngOnInit(): void {
-    this._store.loadData()
-  }
 
 }

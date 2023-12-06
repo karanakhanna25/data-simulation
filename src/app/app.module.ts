@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
-import { FirebaseService } from '@app-data-upload/services/firebase.service';
+import { FirebaseService } from '@app-simulation/services/firebase.service';
 import { HttpClientModule } from '@angular/common/http';
 
 

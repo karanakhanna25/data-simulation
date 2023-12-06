@@ -1,7 +1,7 @@
 import { formatDate } from "@angular/common";
 import { Component, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
+import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 
 @Component({
   selector: 'chart-modal-container',

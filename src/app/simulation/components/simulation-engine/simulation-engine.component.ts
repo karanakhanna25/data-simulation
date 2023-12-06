@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
-import { SimulationDataStore } from "@app-data-upload/stores/data-upload.store/data-upload.store";
+import { SimulationDataStore } from "@app-simulation/store/data-upload.store";
 import { ISimulationEngineConfig } from "@app-simulation/simulation.model";
 import { simulationEngineConfigInitialState } from "@app-simulation/store/simulation-config.state";
 import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";

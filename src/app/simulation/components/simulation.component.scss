@@ -4,6 +4,7 @@
   overflow: hidden;
 }
 
+
 .simulation-drawer {
   box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px rgba(0,0,0,0.141176), 0 1px 10px rgba(0,0,0, 0.12156);
   height: calc(100vh - 64px) !important;
@@ -28,6 +29,7 @@ mat-drawer-content {
 
 .right-section {
   width: 100%;
+  display: flex;
 }
 
 .left-section {

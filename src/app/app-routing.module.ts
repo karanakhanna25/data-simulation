@@ -3,14 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'data-upload',
-    loadChildren: () =>
-      import('@app-data-upload/data-upload.module').then(
-        (m) => m.DataUploadModule
-      )
-  },
-  {
-    path: 'simulation',
+    path: 'simulation-gus',
     loadChildren: () =>
       import('@app-simulation/simulation.module').then(
         (m) => m.SimulationdModule

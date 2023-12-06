@@ -1,4 +1,4 @@
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
+import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 
 
 export function avgPercentForTimeFrame(timeFrame: string, filteredRows: IDataGapperUploadExtended[]): number {

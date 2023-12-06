@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { IDataGapperUploadExtended } from "@app-data-upload/data-upload.model";
+import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 import { Observable } from "rxjs";
 
 @Injectable()
@@ -12,11 +12,12 @@ export class FirebaseService {
 
   constructor(private _http: HttpClient) { }
 
-  addGUSRecords(records: IDataGapperUploadExtended[]): Observable<IDataGapperUploadExtended[]> {
+  addStrategyRecords(records: {[key: string]: any}): Observable<IDataGapperUploadExtended[]> {
+
     return this._http.put<IDataGapperUploadExtended[]>(this.url, records, {headers: this._headers});
   }
 
-  retrieveGUSRecords(): Observable<IDataGapperUploadExtended[]> {
-   return this._http.get<IDataGapperUploadExtended[]>(this.url)
+  retrieveRecords(): Observable<{[key: string]: any}> {
+   return this._http.get<{[key: string]: any}>(this.url)
   }
 }

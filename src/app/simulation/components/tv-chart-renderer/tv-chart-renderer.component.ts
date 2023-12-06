@@ -1,7 +1,7 @@
 // lightweight-chart.component.ts
 
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
-import { PolygonService } from '@app-data-upload/services/polygon.service';
+import { PolygonService } from '@app-simulation/services/polygon.service';
 import { createChart, CandlestickSeriesPartialOptions, UTCTimestamp } from 'lightweight-charts';
 import { take } from 'rxjs';
 
