@@ -29,6 +29,11 @@
   justify-content: space-between;
 }
 
-.upload-icon {
+.upload-icon, .download-icon {
   cursor: pointer;
+}
+
+.action-button {
+  display: flex;
+  gap: 4px;
 }

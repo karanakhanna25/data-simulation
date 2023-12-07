@@ -59,7 +59,8 @@ export function agGridColumnDefs(): ColDef[] {
       filter: true,
       cellRendererSelector: tickerCellRenderer,
       cellClass: 'center-align',
-      width: 120
+      width: 120,
+      pinned: 'left'
     },
     {
       headerName: IDataGapperUploadExtendedFields['Day 1 Date'],
@@ -94,7 +95,8 @@ export function agGridColumnDefs(): ColDef[] {
             }
             return 0;
         },
-        cellClass: 'center-align'
+        cellClass: 'center-align',
+        pinned: 'left'
     }
     },
     {
@@ -113,7 +115,21 @@ export function agGridColumnDefs(): ColDef[] {
       width: 130
     },
     {
+      headerName: IDataGapperUploadExtendedFields['Day 1 Vol'],
+      field: IDataGapperUploadExtendedFields['Day 1 Vol'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
       headerName: IDataGapperUploadExtendedFields['Day 1 PM High'],
+      field: IDataGapperUploadExtendedFields['Day 1 PM High'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 145
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Day 1 PM Low'],
       field: IDataGapperUploadExtendedFields['Day 1 PM Low'],
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',

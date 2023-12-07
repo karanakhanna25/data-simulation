@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, Signal, ViewChild } from "@angular/core";
 import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
 import { SimulationDataStore } from "@app-simulation/store/data-upload.store";
 import { ISimulationEngineConfig } from "@app-simulation/simulation.model";
@@ -19,7 +19,7 @@ export class SimulationEngineComponent implements OnInit {
   @ViewChild('lineChart')
   lineChart!: LineChartComponent;
 
-  equity = this._store.equity;
+  equity = this._store.equity as Signal<(number)[]>;
 
   readonly timeFrameOptions = [
     {value: 15, label: '9:45 a.m.'},
@@ -48,9 +48,6 @@ export class SimulationEngineComponent implements OnInit {
   constructor(private _fb: FormBuilder, private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.lineChart.drawChart(this.portfolio_equity() || []);
-    },200);
     this._configStore.updateSimulationConfig(this.form.value as unknown as ISimulationEngineConfig);
 
     this._updateExitLowPercentShareControl(this._percentSharesExitCloseControl().value);

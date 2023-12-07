@@ -9,7 +9,7 @@ export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperU
     const totalShareForLocate = calculateTotalSharesForLocate(d["Day 1 PM High"], globalEquity[i], config);
     const locatePerShare = perShareLocateCost(d["Day 1 PM High"], config);
     const totalLocate_cost = totalLocateCost(totalShareForLocate, locatePerShare);
-    const firstExitPriceClose = calculateFirstExitPriceClose(firstEntryPrice, timeFrameRiskPrice, d);
+    const firstExitPriceClose = calculateFirstExitPriceClose(firstEntryPrice, timeFrameRiskPrice, d, config);
     const firstExitPriceLow = calculateFirstExitPriceLows(firstEntryPrice, timeFrameRiskPrice, config, d);
 
     //values with slippage
@@ -68,8 +68,12 @@ function calculateFirstEntry(config: ISimulationEngineConfig, data: IDataGapperU
   return undefined;
 }
 
-function calculateFirstExitPriceClose(entryPrice: number | undefined, timeFrameRiskPrice: number, data: IDataGapperUploadExtended): number | undefined {
+function calculateFirstExitPriceClose(entryPrice: number | undefined, timeFrameRiskPrice: number, data: IDataGapperUploadExtended, config: ISimulationEngineConfig): number | undefined {
   if (entryPrice) {
+    const maxLossRiskPrice = Number((data["Day 1 Open"] + (data["Day 1 Open"] * (config.spike_percent_risk/100))).toFixed(2));
+    if (timeFrameRiskPrice > maxLossRiskPrice) {
+      return maxLossRiskPrice;
+    }
     if (data["Day 1 High"] > timeFrameRiskPrice) {
       return timeFrameRiskPrice;
     }
@@ -85,6 +89,10 @@ function calculateFirstExitPriceLows(entryPrice: number | undefined, timeFrameRi
       const timeFrameLow = getRiskTimeFrameLowValue(config.riskTimeFrame, data);
       if (timeFrameLow <= lowCoverPrice) {
         return lowCoverPrice;
+      }
+      const maxLossRiskPrice = Number((data["Day 1 Open"] + (data["Day 1 Open"] * (config.spike_percent_risk/100))).toFixed(2));
+      if (timeFrameRiskPrice > maxLossRiskPrice) {
+        return maxLossRiskPrice;
       }
       if (data["Day 1 High"] > timeFrameRiskPrice) {
         return timeFrameRiskPrice;

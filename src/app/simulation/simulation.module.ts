@@ -37,7 +37,8 @@ import {MatChipsModule} from '@angular/material/chips';
     FormsModule,
     ReactiveFormsModule,
     ChartModule,
-    MatChipsModule
+    MatChipsModule,
+    MatDialogModule
   ],
   exports: [],
   providers: [FirebaseService, PolygonService],

@@ -1,8 +1,7 @@
-import { Injectable } from "@angular/core";
+import { computed, Injectable } from "@angular/core";
 import { ComponentStore } from "@ngrx/component-store";
 import { dataUploadInitialState, IDataUploadSate as ISimulationDataState } from "./data-upload.state";
 import { map, Observable, switchMap, tap } from "rxjs";
-import {uniq} from 'lodash';
 import { FirebaseService } from "@app-simulation/services/firebase.service";
 import { calculatePnl } from "@app-simulation/utils/pnl-calculations.utils";
 import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";
@@ -18,11 +17,11 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   })));
 
   readonly equity = this.selectSignal(state => [...[this._configStore.simulationEngineConfig().equity], ...state.visibleRows.map(g => g.Equity)]);
-
   readonly config = this._configStore.simulationEngineConfig;
 
-  readonly allIndustries = this.selectSignal(state => uniq(state.allRecords.map(g => g.Industry)));
-  readonly allSectors = this.selectSignal(state => uniq(state.allRecords.map(g => g.Sector)));
+  readonly visibleRows = this.selectSignal(state => state.visibleRows);
+  readonly closedRedCount = this.selectSignal(state => state.visibleRows.filter(r => r['Day 1 Open'] > r['Day 1 Close']));
+  readonly closedRedPercent = computed(() => Number(((this.closedRedCount().length)/((this.visibleRows() || []).length) * 100).toFixed(2)))
 
   readonly updateGUSRecords = this.updater((state,  gus: IDataGapperUploadExtended[]) => ({
     ...state,

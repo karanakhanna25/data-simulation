@@ -31,7 +31,6 @@ export class ClosedStatusFilter implements IFilterAngularComp {
       label: 'Closed Green'
     }
   ];
-  sectors = this._store.allSectors;
 
 
   constructor(private _store: SimulationDataStore) {}

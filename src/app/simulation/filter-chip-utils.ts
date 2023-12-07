@@ -1,5 +1,6 @@
 import { ColDef } from "ag-grid-community";
 import { agGridColumnDefs } from "./utils/simulation-table-column.utils";
+import { formatDate } from "@angular/common";
 
 const filterTypeToSymbolMap: {[key: string]: string} = {
   equals: '=',
@@ -15,8 +16,8 @@ const filterTypeToSymbolMap: {[key: string]: string} = {
 }
 
 function updateFilterCondition(columnfilterModel: any): string {
-  const fromValue = columnfilterModel.filter;
-  const toValue = columnfilterModel.filterTo;
+  const fromValue = columnfilterModel.filter || columnfilterModel.dateFrom;
+  const toValue = columnfilterModel.filterTo || columnfilterModel.dateTp;
   return `${fromValue} - ${toValue}`;
 }
 
@@ -36,12 +37,19 @@ function buildFilterExpression(columnFilterModel: any): string {
         if (columnFilterModel.filter === 0 || columnFilterModel.filter) {
           return `[ ${filterTypeToSymbolMap[columnFilterModel.type]} ${columnFilterModel.filter} ]`;
         }
+        if(columnFilterModel.filterType === 'date') {
+          return `[${filterTypeToSymbolMap[columnFilterModel.type]} ${checkAndFormatDate(columnFilterModel.dateFrom) || checkAndFormatDate(columnFilterModel.dateTo)}]`
+        }
         return `[${filterTypeToSymbolMap[columnFilterModel.type]}]`;
       } else {
         return `[${slicingSquareBraces(buildFilterExpression(columnFilterModel.condition1))} ${columnFilterModel.operator}
           ${slicingSquareBraces(buildFilterExpression(columnFilterModel.condition2))}]`
       }
   }
+}
+
+function checkAndFormatDate(date: string): string {
+  return date ? formatDate(date, 'MM-dd-yyyy', 'en-US') : date;
 }
 
 export function getFilterExpression(filters: any): {key: string, expression: string}[] {

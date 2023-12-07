@@ -1,14 +1,17 @@
 import { formatDate } from '@angular/common';
-import { Component, HostBinding, OnInit, computed } from '@angular/core';
+import { Component, HostBinding, OnInit, computed, effect } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from '@app-simulation/simulation.model';
 import { SimulationDataStore } from '@app-simulation/store/data-upload.store';
 import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-config.store';
 import { avgPercentForTimeFrame, medianPercentForTimeFrame } from '@app-simulation/utils/calculations.utils';
 import { agGridColumnDefs } from '@app-simulation/utils/simulation-table-column.utils';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, RowClassParams, SortChangedEvent } from 'ag-grid-community';
-import { filter } from 'rxjs';
+import { ColDef, ExcelExportParams, FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, ModuleRegistry, ProcessHeaderForExportParams, RowClassParams, SortChangedEvent } from 'ag-grid-community';
+import { filter, take } from 'rxjs';
 import * as XLSX from 'xlsx';
+import { ExcelFileNameInputDialogComponent } from './excel-file-input/excel-file-input-dialog.component';
+
 
 @UntilDestroy()
 @Component({
@@ -25,7 +28,11 @@ export class SimulationTableComponent implements OnInit {
   columnApi!: any;
 
   readonly rowData = this._store.gusData;
+  readonly rowData$ = this._store.select(state => state.allRecords);
   readonly filterText = this._configStore.filterText;
+  readonly closedRed = this._store.closedRedCount;
+  readonly closedRedPercent = this._store.closedRedPercent;
+  readonly visibleRows = this._store.visibleRows;
 
   colDefs = agGridColumnDefs();
 
@@ -37,7 +44,7 @@ export class SimulationTableComponent implements OnInit {
     onSortChanged: this.onSortChanged.bind(this)
   }
 
-  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
+  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog) {}
 
   ngOnInit(): void {
     this._configStore.simulationEngineConfig$.pipe(
@@ -82,6 +89,26 @@ export class SimulationTableComponent implements OnInit {
     reader.readAsBinaryString(target.files[0]);
   }
 
+  exportFromGrid(): void {
+    const ref = this._dialog.open(ExcelFileNameInputDialogComponent, {
+      width: '400px',
+    });
+    ref.afterClosed().pipe(
+      take(1)
+    ).subscribe(data => {
+      this._exportFromGrid(data);
+    })
+  }
+
+  private _exportFromGrid(fileName: string): void {
+    const data = this.orderedFilteredRows(); // Get AG-Grid data
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data); // Convert to worksheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new(); // New workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // Append sheet to workbook
+
+    // Generate Excel file and trigger download
+    XLSX.writeFile(wb, `${fileName}.xlsx`);
+  }
 
 
   private _mapToFields(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
@@ -105,9 +132,12 @@ export class SimulationTableComponent implements OnInit {
   onGridReady(params: GridReadyEvent): void {
     this.gripApi = params.api;
     params.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
-    setTimeout(() => {
-      this._store.runPnlCalculations(this.filteredRows());
-    }, 200)
+    this.rowData$.pipe(
+      filter(data => !!data.length),
+      take(1)
+    ).subscribe(data => {
+      this._store.runPnlCalculations(data as IDataGapperUploadExtended[]);
+    })
   }
 
   getRowClass(data: RowClassParams): string {
@@ -132,7 +162,6 @@ export class SimulationTableComponent implements OnInit {
   onFilterChanged(evt: FilterChangedEvent): void {
     this.gripApi = evt.api;
     evt.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
-    console.log(this.filteredRows());
     this._configStore.updateFilter(this.gripApi.getFilterModel());
     this._store.runPnlCalculations(this.filteredRows());
 
@@ -148,6 +177,23 @@ export class SimulationTableComponent implements OnInit {
     this.gripApi?.forEachNode((node) => {
       if (node.displayed) {
         rowData.push(node.data);
+      }
+    })
+    return rowData;
+  }
+
+  orderedFilteredRows(): IDataGapperUploadExtended[] {
+    const rowData: IDataGapperUploadExtended[] = [];
+    const filterCols = [IDataGapperUploadExtendedFields['Closed Status'], IDataGapperUploadExtendedFields['pmh-open%']];
+    const columnDefs = (agGridColumnDefs() as ColDef[]).filter(d => !(filterCols as any).includes(d.field));
+    this.gripApi?.forEachNode((node) => {
+      const orderedData = {};
+      columnDefs.forEach((colDef: ColDef) => {
+        const field = colDef.field as string;
+        (orderedData as any)[field] = node.data[field];
+      });
+      if (node.displayed) {
+        rowData.push(orderedData as IDataGapperUploadExtended);
       }
     })
     return rowData;
@@ -211,13 +257,13 @@ export class SimulationTableComponent implements OnInit {
     })) as IDataGapperUploadExtended[];
   }
 
-  closedRed(): IDataGapperUploadExtended[] {
-    return (this.filteredRows() || []).filter(r => r['Day 1 Open'] > r['Day 1 Close']);
-  }
+  // closedRed(): IDataGapperUploadExtended[] {
+  //   return (this.filteredRows() || []).filter(r => r['Day 1 Open'] > r['Day 1 Close']);
+  // }
 
-  closedRedPercent(): number {
-    return Number(((this.closedRed().length)/((this.filteredRows() || []).length) * 100).toFixed(2));
-  }
+  // closedRedPercent(): number {
+  //   return Number(((this.closedRed().length)/((this.filteredRows() || []).length) * 100).toFixed(2));
+  // }
 
 
   timeFrameHighBrokeCount(timeFrame: string): number {

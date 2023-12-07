@@ -1,13 +1,14 @@
-// Import D3
-import { Component, Input } from '@angular/core';
+
+import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
   selector: 'line-chart',
   template: '<div class="chart-container" id="chartContainer"><svg id="lineChart"></svg></div>',
-  styleUrls: ['line-chart.component.scss']
+  styleUrls: ['line-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LineChartComponent {
+export class LineChartComponent implements AfterViewInit {
 
   @Input()
   width!: 500;
@@ -18,9 +19,16 @@ export class LineChartComponent {
   lineData: number[] = [];
 
   @Input()
-  set data(data: number[] | undefined[]) {
+  set data(data: number[]) {
     this.lineData = data as number[];
     this.drawChart(data as number[]);
+  }
+
+  @Output()
+  onInit: EventEmitter<void> = new EventEmitter<void>()
+
+  ngAfterViewInit(): void {
+    this.onInit.emit();
   }
 
   drawChart(data: number[]) {
