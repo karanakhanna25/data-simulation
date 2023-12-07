@@ -5,7 +5,7 @@ import { map, Observable, switchMap, tap } from "rxjs";
 import { FirebaseService } from "@app-simulation/services/firebase.service";
 import { calculatePnl } from "@app-simulation/utils/pnl-calculations.utils";
 import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";
-import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
+import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from "@app-simulation/simulation.model";
 
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
@@ -31,7 +31,12 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   readonly setVisibleRows = this.updater((state, visibleRows: IDataGapperUploadExtended[]) => ({
     ...state,
     visibleRows
-  }))
+  }));
+
+  readonly resetPnl = this.updater((state) => ({
+    ...state,
+    allRecords: this._resetPnl(state.allRecords)
+  }));
 
   constructor(private _firebaseService: FirebaseService, private _configStore: SimulationEngineConfigStore) {
     super(dataUploadInitialState)
@@ -59,6 +64,10 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
   readonly runPnlCalculations = this.effect((trigger$: Observable<IDataGapperUploadExtended[]>) =>
     trigger$.pipe(
+      tap(() => {
+        this.resetPnl();
+      }),
+    map(data => this._resetPnl(data)),
     map(data => calculatePnl(this.config(), data)),
       tap(data => {
         this.setVisibleRows(data);
@@ -76,6 +85,13 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
       )),
     )
   )
+
+  private _resetPnl(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
+    return data.map(d => ({...d,
+      [IDataGapperUploadExtendedFields["Profit/Loss"]]: undefined,
+      [IDataGapperUploadExtendedFields.Equity]: undefined
+    }))
+  }
 
   private _calculateDistanceOpenPmh(open: number, pmh: number): number {
     return Number(((pmh-open)/open*100).toFixed(2));
