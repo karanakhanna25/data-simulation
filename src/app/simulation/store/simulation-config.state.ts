@@ -2,6 +2,7 @@ import { ISimulationEngineConfig } from "@app-simulation/simulation.model"
 
 export interface ISimulationEngineConfigState {
   config: ISimulationEngineConfig;
+  filter: {[key: string]: any};
 }
 
 export const simulationEngineConfigInitialState = {
@@ -18,5 +19,6 @@ export const simulationEngineConfigInitialState = {
     shares_exit_lows: 0,
     wiggle_room: 3,
     spike_percent_risk: 55
-  }
+  },
+  filter: {}
 }

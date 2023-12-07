@@ -15,6 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { SimulationEngineComponent } from './components/simulation-engine/simulation-engine.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartModule } from '../charts/chart.module';
+import {MatChipsModule} from '@angular/material/chips';
+
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { ChartModule } from '../charts/chart.module';
     MatIconModule,
     FormsModule,
     ReactiveFormsModule,
-    ChartModule
+    ChartModule,
+    MatChipsModule
   ],
   exports: [],
   providers: [FirebaseService, PolygonService],

@@ -80,11 +80,10 @@ export class IndustryFilter implements IFilterAngularComp {
   }
 
   getModel(): any {
-    return this.visibleFilterOptions.filter(f => f.selected).map(f => f.label);
   }
 
   setModel(model: any): void {
-    this.visibleFilterOptions.forEach(f => f.selected = model.includes(f.label));
+
   }
 
   everyVisibleFilterDesected(): boolean {

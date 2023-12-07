@@ -11,7 +11,7 @@ import { IDataGapperUploadExtended } from "@app-simulation/simulation.model";
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
-  readonly gusData = this.selectSignal(state => (state.gus || []).map(g => ({
+  readonly gusData = this.selectSignal(state => (state.allRecords || []).map(g => ({
     ...g,
     "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
     "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green'
@@ -21,12 +21,12 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
   readonly config = this._configStore.simulationEngineConfig;
 
-  readonly allIndustries = this.selectSignal(state => uniq(state.gus.map(g => g.Industry)));
-  readonly allSectors = this.selectSignal(state => uniq(state.gus.map(g => g.Sector)));
+  readonly allIndustries = this.selectSignal(state => uniq(state.allRecords.map(g => g.Industry)));
+  readonly allSectors = this.selectSignal(state => uniq(state.allRecords.map(g => g.Sector)));
 
   readonly updateGUSRecords = this.updater((state,  gus: IDataGapperUploadExtended[]) => ({
     ...state,
-    gus
+    allRecords: gus
   }))
 
   readonly setVisibleRows = this.updater((state, visibleRows: IDataGapperUploadExtended[]) => ({

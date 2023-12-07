@@ -25,6 +25,7 @@ export class SimulationTableComponent implements OnInit {
   columnApi!: any;
 
   readonly rowData = this._store.gusData;
+  readonly filterText = this._configStore.filterText;
 
   colDefs = agGridColumnDefs();
 
@@ -43,6 +44,11 @@ export class SimulationTableComponent implements OnInit {
       filter(() => this.filteredRows().length > 0),
       untilDestroyed(this)
     ).subscribe(() => this._store.runPnlCalculations(this.filteredRows()));
+
+    this._configStore.filter$.pipe(
+      filter(() => !!this.gripApi),
+      untilDestroyed(this)
+    ).subscribe(filter => this.gripApi.setFilterModel(filter));
   }
 
   onFileChanged(evt: Event): void {
@@ -69,12 +75,14 @@ export class SimulationTableComponent implements OnInit {
         this._store.uploadGusData({
           data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
           context: 'gus',
-          type: 'replace'
+          type: 'append'
         });
       }
     }
     reader.readAsBinaryString(target.files[0]);
   }
+
+
 
   private _mapToFields(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
     const fields = Object.keys(IDataGapperUploadExtendedFields);
@@ -115,10 +123,19 @@ export class SimulationTableComponent implements OnInit {
     return ''
   }
 
+  remove(key: string): void {
+    const activeFilter = this.gripApi.getFilterModel();
+    delete activeFilter[key];
+    this._configStore.updateFilter(activeFilter);
+  }
+
   onFilterChanged(evt: FilterChangedEvent): void {
     this.gripApi = evt.api;
     evt.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
+    console.log(this.filteredRows());
+    this._configStore.updateFilter(this.gripApi.getFilterModel());
     this._store.runPnlCalculations(this.filteredRows());
+
   }
 
   onSortChanged(evt: SortChangedEvent): void {
