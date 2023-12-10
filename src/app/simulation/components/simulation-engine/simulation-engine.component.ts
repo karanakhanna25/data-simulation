@@ -26,7 +26,8 @@ export class SimulationEngineComponent implements OnInit {
     {value: 30, label: '10:00 a.m.'},
     {value: 60, label: '10:30 a.m.'},
     {value: 90, label: '11:00 a.m.'},
-    {value: 120, label: '11:30 a.m.'}
+    {value: 120, label: '11:30 a.m.'},
+    {value: 999, label: 'Max Loss'}
   ]
 
   readonly form = this._fb.group({

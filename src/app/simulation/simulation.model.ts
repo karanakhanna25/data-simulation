@@ -55,6 +55,7 @@ export interface IDataGapper {
   'Sector': string;
   'Market Cap': string;
   'Float': string,
+  'Open-High Spike%': number
 }
 
 export interface IDataGapperUploadExtended extends IDataGapper {
@@ -108,5 +109,6 @@ export enum IDataGapperUploadExtendedFields {
   'pmh-open%' = 'pmh-open%',
   'Closed Status' = 'Closed Status',
   'Profit/Loss' = 'Profit/Loss',
-  'Equity' = 'Equity'
+  'Equity' = 'Equity',
+  'Open-High Spike%' = 'Open-High Spike%'
 }

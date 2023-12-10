@@ -10,11 +10,7 @@ import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from "@app
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
-  readonly gusData = this.selectSignal(state => (state.allRecords || []).map(g => ({
-    ...g,
-    "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
-    "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green'
-  })));
+  readonly gusData = this.selectSignal(state => (state.allRecords || []));
 
   readonly equity = this.selectSignal(state => [...[this._configStore.simulationEngineConfig().equity], ...state.visibleRows.map(g => g.Equity)]);
   readonly config = this._configStore.simulationEngineConfig;
@@ -25,12 +21,12 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
   readonly updateGUSRecords = this.updater((state,  gus: IDataGapperUploadExtended[]) => ({
     ...state,
-    allRecords: gus
+    allRecords: this._addCalculatedFields(gus)
   }))
 
   readonly setVisibleRows = this.updater((state, visibleRows: IDataGapperUploadExtended[]) => ({
     ...state,
-    visibleRows
+    visibleRows: this._addCalculatedFields(visibleRows)
   }));
 
   readonly resetPnl = this.updater((state) => ({
@@ -111,6 +107,15 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     } else {
       return newRecords;
     }
+  }
+
+  private _addCalculatedFields(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
+    return data.map(g => ({
+      ...g,
+      "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
+      "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green',
+      'Open-High Spike%': Number(((g["Day 1 High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2))
+    }))
   }
 
 }

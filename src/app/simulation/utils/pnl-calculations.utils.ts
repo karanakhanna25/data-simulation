@@ -150,6 +150,8 @@ function getRiskTimeFrameHighValue(timeFrame: number, data: IDataGapperUploadExt
       return data["Day 1 90Min High"];
     case 120:
       return data["Day 1 120Min High"];
+    case 999:
+      return data["Day 1 High"];
   }
 }
 

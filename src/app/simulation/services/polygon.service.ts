@@ -15,7 +15,7 @@ export class PolygonService {
   constructor(private _http: HttpClient) { }
 
   getIntradayData(stockSymbol: string, date: string): Observable<IPolygonMinuteData> {
-    const url = `https://api.polygon.io/v2/aggs/ticker/${stockSymbol}/range/1/minute/${date}/${date}?apiKey=${API_KEY}`;
+    const url = `https://api.polygon.io/v2/aggs/ticker/${stockSymbol}/range/1/minute/${date}/${date}?adjusted=false&apiKey=${API_KEY}`;
     return this._http.get<IPolygonMinuteData>(url);
   }
 }

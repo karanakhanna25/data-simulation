@@ -343,14 +343,6 @@ export function agGridColumnDefs(): ColDef[] {
       width: 140
     },
     {
-      headerName: IDataGapperUploadExtendedFields['pmh-open%'],
-      field: IDataGapperUploadExtendedFields['pmh-open%'],
-      filter: 'agNumberColumnFilter',
-      cellClass: 'center-align',
-      valueFormatter: numberFormatter,
-      width: 130
-    },
-    {
       headerName: IDataGapperUploadExtendedFields['Market Cap'],
       field: IDataGapperUploadExtendedFields['Market Cap'],
       filter: 'agNumberColumnFilter',
@@ -381,6 +373,22 @@ export function agGridColumnDefs(): ColDef[] {
 
       width: 140,
       tooltipField: IDataGapperUploadExtendedFields.Sector
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['pmh-open%'],
+      field: IDataGapperUploadExtendedFields['pmh-open%'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 130
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Open-High Spike%'],
+      field: IDataGapperUploadExtendedFields['Open-High Spike%'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 130
     },
     {
       headerName: IDataGapperUploadExtendedFields['Profit/Loss'],

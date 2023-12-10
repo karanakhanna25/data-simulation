@@ -7,3 +7,12 @@
 .action-buttons {
   align-self: flex-end;
 }
+
+.info {
+  display: flex;
+  gap: 24px;
+  .stock-info, .stock-stats {
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -3,8 +3,10 @@
 import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { PolygonService } from '@app-simulation/services/polygon.service';
-import { createChart, CandlestickSeriesPartialOptions, UTCTimestamp } from 'lightweight-charts';
+import { IDataGapperUploadExtended } from '@app-simulation/simulation.model';
+import { createChart, CandlestickSeriesPartialOptions, UTCTimestamp, LineStyle } from 'lightweight-charts';
 import { take } from 'rxjs';
+
 
 
 @Component({
@@ -18,6 +20,9 @@ export class TVLightweightChartComponent implements OnInit {
 
   @Input()
   ticker!: string;
+
+  @Input()
+  data!: IDataGapperUploadExtended;
 
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
@@ -46,9 +51,95 @@ export class TVLightweightChartComponent implements OnInit {
           close: item.c // Closing price
         }
       });
+      candleSeries.createPriceLine({
+        price: this.data['Day 1 PM High'],
+        color: 'red',
+        lineWidth: 2,
+        lineStyle: LineStyle.Solid,
+        axisLabelVisible: true,
+        title: 'PMH'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.data['Day 1 Open'],
+        color: 'green',
+        lineWidth: 2,
+        lineStyle: LineStyle.Solid,
+        axisLabelVisible: true,
+        title: 'Open Price'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.getFibLevel(0.786),
+        color: 'blue',
+        lineWidth: 2,
+        lineStyle: LineStyle.Dotted,
+        axisLabelVisible: true,
+        title: '0.786 Fib level'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.getFibLevel(0.886),
+        color: 'blue',
+        lineWidth: 2,
+        lineStyle: LineStyle.Dotted,
+        axisLabelVisible: true,
+        title: '0.86 Fib level'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.getFibLevel(0.618),
+        color: 'blue',
+        lineWidth: 2,
+        lineStyle: LineStyle.Dotted,
+        axisLabelVisible: true,
+        title: '0.618 Fib level'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.getRiskFromFibLevel(0.786, 55),
+        color: this.getRiskFromFibLevelColor(0.786, 55),
+        lineWidth: 2,
+        lineStyle: LineStyle.Dashed,
+        axisLabelVisible: true,
+        title: 'Risk from 0.786 Fib Level'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.getRiskFromFibLevel(0.886, 55),
+        color: this.getRiskFromFibLevelColor(0.886, 55),
+        lineWidth: 2,
+        lineStyle: LineStyle.Dashed,
+        axisLabelVisible: true,
+        title: 'Risk from 0.886 Fib Level'
+      });
+
+      candleSeries.createPriceLine({
+        price: this.getRiskFromFibLevel(0.886, 55, 5),
+        color: this.getRiskFromFibLevelColor(0.886, 55, 5),
+        lineWidth: 2,
+        lineStyle: LineStyle.Solid,
+        axisLabelVisible: true,
+        title: 'Risk from 0.886 Fib + 5% wiggle Room'
+      });
 
       candleSeries.setData(formattedData);
     });
+  }
+
+  getRiskFromFibLevel(level: number, risk_percent: number, wiggleRoom?: number): number {
+    const fibLevel = this.getFibLevel(level);
+    const riskLevel = Number((fibLevel + (fibLevel * (risk_percent/100))).toFixed(2));
+    return wiggleRoom ? Number((riskLevel + (riskLevel * (wiggleRoom/100))).toFixed(2)) : riskLevel;
+  }
+
+  getRiskFromFibLevelColor(level: number, risk_percent: number, wiggleRoom?: number): string {
+    const riskLevel =this.getRiskFromFibLevel(level, risk_percent, wiggleRoom);
+    return this.data['Day 1 High'] > riskLevel ? 'orange': 'yellow';
+  }
+
+  getFibLevel(level: number): number{
+    return Number((((this.data['Day 1 PM High'] - this.data['Day -1 Close'])*level) + this.data['Day -1 Close']).toFixed(2));
   }
 
   private _offset(date: string): number {

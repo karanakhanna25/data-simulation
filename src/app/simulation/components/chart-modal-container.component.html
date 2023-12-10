@@ -1,8 +1,20 @@
 
-<label>Date: {{date}}</label>
-<label>ticker: {{data.Ticker}}</label>
-<label>Premarket Volume: {{data['Day 1 PM Vol'] | number }}</label>
-<tv-lightweight-chart *ngIf="!!ticker && !!date" [ticker]="ticker" [date]="date"></tv-lightweight-chart>
+<div class="info">
+  <div class="stock-info">
+    <label>Date: {{date}}</label>
+    <label>ticker: {{data.Ticker}}</label>
+    <label>Market Cap: {{data['Market Cap'] | number }}</label>
+    <label>Float: {{data.Float| number }}</label>
+    <label>Premarket Volume: {{data['Day 1 PM Vol'] | number }}</label>
+  </div>
+  <div class="stock-stats">
+    <label>open - HOD spike %: {{openTOHODSpikePercent()}}%</label>
+    <label>11:30am high - 11:30am close%: {{High1130ToClose1130AMFadePercent()}}%</label>
+    <label>Open - 11:30am close%: {{OpenToClose1130AMFadePercent()}}%</label>
+    <label>Open - Close%: {{OpenToCloseFadePercent()}}%</label>
+  </div>
+</div>
+<tv-lightweight-chart *ngIf="!!ticker && !!date" [ticker]="ticker" [date]="date" [data]="data"></tv-lightweight-chart>
 <div class="action-buttons">
   <button mat-button color="primary" [mat-dialog-close]="true">close</button>
 </div>
