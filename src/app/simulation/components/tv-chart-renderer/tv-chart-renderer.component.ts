@@ -4,6 +4,7 @@ import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { PolygonService } from '@app-simulation/services/polygon.service';
 import { IDataGapperUploadExtended } from '@app-simulation/simulation.model';
+import { extractFibLevel } from '@app-simulation/utils/common.utils';
 import { createChart, CandlestickSeriesPartialOptions, UTCTimestamp, LineStyle } from 'lightweight-charts';
 import { take } from 'rxjs';
 
@@ -139,7 +140,7 @@ export class TVLightweightChartComponent implements OnInit {
   }
 
   getFibLevel(level: number): number{
-    return Number((((this.data['Day 1 PM High'] - this.data['Day -1 Close'])*level) + this.data['Day -1 Close']).toFixed(2));
+    return extractFibLevel(level, this.data);
   }
 
   private _offset(date: string): number {

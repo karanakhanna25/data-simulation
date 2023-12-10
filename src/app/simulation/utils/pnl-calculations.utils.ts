@@ -1,4 +1,5 @@
 import { IDataGapperUploadExtended, ISimulationEngineConfig } from "@app-simulation/simulation.model";
+import { getRiskTimeFrameHighValue } from "./common.utils";
 
 export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
   const globalEquity = [config.equity];
@@ -135,24 +136,6 @@ function totalLocateCost(totalShares: number, pricePerShare: number): number {
 function calculateRiskTimeframePercentSpike(timeFameHigh: number, data: IDataGapperUploadExtended): number {
   const open = data["Day 1 Open"];
   return Number(((getRiskTimeFrameHighValue(timeFameHigh, data) - open)/open*100).toFixed(2));
-}
-
-function getRiskTimeFrameHighValue(timeFrame: number, data: IDataGapperUploadExtended): number {
-  switch (timeFrame) {
-    case 15:
-      return data["Day 1 15Min High"];
-    case 30:
-      return data["Day 1 30Min High"];
-    case 60:
-      return data["Day 1 60Min High"];
-    case 90:
-      default:
-      return data["Day 1 90Min High"];
-    case 120:
-      return data["Day 1 120Min High"];
-    case 999:
-      return data["Day 1 High"];
-  }
 }
 
 function getRiskTimeFrameLowValue(timeFrame: number, data: IDataGapperUploadExtended): number {
