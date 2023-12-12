@@ -6,6 +6,7 @@ import { FirebaseService } from "@app-simulation/services/firebase.service";
 import { calculatePnl } from "@app-simulation/utils/pnl-calculations.utils";
 import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-config.store";
 import { IDataGapperUploadExtended, IDataGapperUploadExtendedFields } from "@app-simulation/simulation.model";
+import { extractFibLevel, getOpenRelativeToFibLevel } from "@app-simulation/utils/common.utils";
 
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
@@ -114,8 +115,12 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
       ...g,
       "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
       "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green',
-      'Open-High Spike%': Number(((g["Day 1 High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2))
+      'Open-High Spike%': Number(((g["Day 1 High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
+      'Open wrt to Fib': getOpenRelativeToFibLevel(g),
+      '60Min Close < Open': g["Day 1 60Min Close"] < g["Day 1 Open"] ? 1 : 0,
+      '30Min Close < Open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
+      'Broke 11am High': g["Day 1 High"] > g["Day 1 90Min High"] ? 1 : 0,
+      '60Min High > 30Min High': g["Day 1 60Min High"] > g["Day 1 30Min High"] ? 1 : 0
     }))
   }
-
 }

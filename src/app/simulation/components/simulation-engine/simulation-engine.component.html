@@ -30,6 +30,10 @@
       <input type="number" formControlName="spike_percent_risk" class="wiggle-room" [min]="0" />
       <label>Max spike% Risk</label>
     </div>
+    <div class="input-label input-checkbox-label">
+      <input type="checkbox" formControlName="risk_from_open" class="checkbox" />
+      <label>Risk From Open</label>
+    </div>
   </div>
   <div class="entry-1">
     <label class="title">First entry</label>
@@ -41,10 +45,6 @@
       <div class="input-label">
         <input type="number" formControlName="first_risk" class="max-loss-risk" [min]="0" [max]="100"/>
         <label>Max Loss Risk %</label>
-      </div>
-      <div class="input-label input-checkbox-label">
-        <input type="checkbox" formControlName="first_open_size" class="checkbox" />
-        <label>Open Size</label>
       </div>
     </div>
   </div>

@@ -2,12 +2,12 @@ export interface ISimulationEngineConfig {
   equity: number,
   slippage: number,
   locate: number,
-  cappedRisk?: number,
+  cappedRisk: number,
   riskTimeFrame: number,
   wiggle_room: number,
   first_risk: number,
   first_entry_spike: number,
-  first_open_size: boolean,
+  risk_from_open: boolean,
   exit_lows?: number,
   shares_exit_close: number,
   shares_exit_lows: number,
@@ -55,7 +55,6 @@ export interface IDataGapper {
   'Sector': string;
   'Market Cap': string;
   'Float': string,
-  'Open-High Spike%': number
 }
 
 export interface IDataGapperUploadExtended extends IDataGapper {
@@ -64,6 +63,12 @@ export interface IDataGapperUploadExtended extends IDataGapper {
   'Closed Status'?: 'Closed Red' | 'Closed Green';
   'Profit/Loss'?: number;
   'Equity'?: number;
+  'Open-High Spike%': number,
+  'Open wrt to Fib': 'Between' | 'Under' | 'Above' | undefined,
+  '60Min Close < Open': 1 | 0,
+  '30Min Close < Open': 1 | 0,
+  'Broke 11am High': 1 | 0,
+  '60Min High > 30Min High': 1 | 0
 }
 
 export enum IDataGapperUploadExtendedFields {
@@ -110,5 +115,10 @@ export enum IDataGapperUploadExtendedFields {
   'Closed Status' = 'Closed Status',
   'Profit/Loss' = 'Profit/Loss',
   'Equity' = 'Equity',
-  'Open-High Spike%' = 'Open-High Spike%'
+  'Open-High Spike%' = 'Open-High Spike%',
+  'Open wrt to Fib' = 'Open wrt to Fib',
+  '60Min Close < Open' = '60Min Close < Open',
+  '30Min Close < Open' = '30Min Close < Open',
+  'Broke 11am High' = 'Broke 11am High',
+  '60Min High > 30Min High' = '60Min High > 30Min High'
 }

@@ -370,7 +370,6 @@ export function agGridColumnDefs(): ColDef[] {
       headerName: IDataGapperUploadExtendedFields.Sector,
       field: IDataGapperUploadExtendedFields.Sector,
       filter: SectorFilter,
-
       width: 140,
       tooltipField: IDataGapperUploadExtendedFields.Sector
     },
@@ -388,7 +387,42 @@ export function agGridColumnDefs(): ColDef[] {
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
       valueFormatter: numberFormatter,
-      width: 130
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Open wrt to Fib'],
+      field: IDataGapperUploadExtendedFields['Open wrt to Fib'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['30Min Close < Open'],
+      field: IDataGapperUploadExtendedFields['30Min Close < Open'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['60Min Close < Open'],
+      field: IDataGapperUploadExtendedFields['60Min Close < Open'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['60Min High > 30Min High'],
+      field: IDataGapperUploadExtendedFields['60Min High > 30Min High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Broke 11am High'],
+      field: IDataGapperUploadExtendedFields['Broke 11am High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
     },
     {
       headerName: IDataGapperUploadExtendedFields['Profit/Loss'],

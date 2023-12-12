@@ -24,6 +24,22 @@ export class ChartModalContainerComponent {
     return Number((((this.data["Day 1 120Min Close"] - this.data["Day 1 120Min High"])/this.data["Day 1 120Min High"] * 100).toFixed(2)));
   }
 
+  Close1130ToEODCloseFadePercent(): number {
+    return Number((((this.data["Day 1 Close"] - this.data["Day 1 120Min Close"])/this.data["Day 1 120Min Close"] * 100).toFixed(2)));
+  }
+
+  Close11ToEODCloseFadePercent(): number {
+    return Number((((this.data["Day 1 Close"] - this.data["Day 1 90Min Close"])/this.data["Day 1 90Min Close"] * 100).toFixed(2)));
+  }
+
+  Close1030ToEODCloseFadePercent(): number {
+    return Number((((this.data["Day 1 Close"] - this.data["Day 1 60Min Close"])/this.data["Day 1 60Min Close"] * 100).toFixed(2)));
+  }
+
+  Close10ToEODCloseFadePercent(): number {
+    return Number((((this.data["Day 1 Close"] - this.data["Day 1 30Min Close"])/this.data["Day 1 30Min Close"] * 100).toFixed(2)));
+  }
+
   FibLevelToClose1130AMFadePercent(level: number): number | string {
     const fibLevel = extractFibLevel(level, this.data);
     const timeFrameHigh = getRiskTimeFrameHighValue(120, this.data)

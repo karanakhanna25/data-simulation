@@ -1,5 +1,5 @@
 import { IDataGapperUploadExtended, ISimulationEngineConfig } from "@app-simulation/simulation.model";
-import { getRiskTimeFrameHighValue } from "./common.utils";
+import { extractFibLevel, getOpenRelativeToFibLevel, getRiskTimeFrameHighValue } from "./common.utils";
 
 export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
   const globalEquity = [config.equity];
@@ -7,23 +7,21 @@ export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperU
     const firstEntryPrice = calculateFirstEntry(config, d);
     const timeFrameRiskPrice = getRiskTimeFrameHighValue(config.riskTimeFrame, d);
     const totalShares = calculateTotalShares(firstEntryPrice, globalEquity[i], config, d);
-    const totalShareForLocate = calculateTotalSharesForLocate(d["Day 1 PM High"], globalEquity[i], config);
+    const totalShareForLocate = calculateTotalSharesForLocate(d["Day 1 PM High"], globalEquity[i], config, d);
     const locatePerShare = perShareLocateCost(d["Day 1 PM High"], config);
     const totalLocate_cost = totalLocateCost(totalShareForLocate, locatePerShare);
-    const firstExitPriceClose = calculateFirstExitPriceClose(firstEntryPrice, timeFrameRiskPrice, d, config);
-    const firstExitPriceLow = calculateFirstExitPriceLows(firstEntryPrice, timeFrameRiskPrice, config, d);
+    const firstExitPriceClose = calculateFirstExitPriceClose(firstEntryPrice, timeFrameRiskPrice, d, config) || 0;
+    const firstExitPriceLow = calculateFirstExitPriceLows(firstEntryPrice, timeFrameRiskPrice, config, d) || 0;
 
     //values with slippage
     const firstEntryWithSlippage = addSlippage(firstEntryPrice, config, 'entry') || 0;
-    const firstExitLowWithSlippage = addSlippage(firstExitPriceLow, config, 'exit') || 0;
-    const firstExitCloseWithSlippage = addSlippage(firstExitPriceClose, config, 'exit') || 0;
 
     // number of shares
     const totalShareClose = calculateShareCountForClose(totalShares, config);
     const totalSharesLow  = calculateShareCountForLows(totalShares, config);
 
-    const pnlClose = calculateProfitLoss(totalShareClose, firstEntryWithSlippage, firstExitCloseWithSlippage);
-    const pnlLow = calculateProfitLoss(totalSharesLow, firstEntryWithSlippage, firstExitLowWithSlippage);
+    const pnlClose = calculateProfitLoss(totalShareClose, firstEntryWithSlippage, firstExitPriceClose);
+    const pnlLow = calculateProfitLoss(totalSharesLow, firstEntryWithSlippage, firstExitPriceLow);
     const totalPnl = Number((pnlClose + pnlLow - totalLocate_cost).toFixed(2));
 
     const lastRecordEquity =  globalEquity[i];
@@ -63,20 +61,56 @@ function calculateFirstEntry(config: ISimulationEngineConfig, data: IDataGapperU
   const entry_spike_percent = config.first_entry_spike;
   const open = data["Day 1 Open"];
   const timeFrameHigh_percent = calculateRiskTimeframePercentSpike(config.riskTimeFrame, data);
-  if (timeFrameHigh_percent >= entry_spike_percent ) {
-    return Number((open + (open * (entry_spike_percent/100))).toFixed(2));
+  const timeFrameHighValue = getRiskTimeFrameHighValue(config.riskTimeFrame, data);
+  const openRelativeToFibLevel = getOpenRelativeToFibLevel(data);
+  const entryAfterSpike = Number((open + (open * (entry_spike_percent/100))).toFixed(2))
+  if (openRelativeToFibLevel === 'Above') {
+    if (timeFrameHighValue >= entryAfterSpike) {
+      return entryAfterSpike;
+    }
   }
+
+  if (openRelativeToFibLevel === 'Between') {
+    if (timeFrameHighValue >= entryAfterSpike) {
+      return entryAfterSpike;
+    }
+  }
+
+  if (openRelativeToFibLevel === 'Under') {
+    const fibLevel0786 = extractFibLevel(0.786, data);
+    if (timeFrameHighValue >= fibLevel0786) {
+      return fibLevel0786;
+    }
+  }
+  // if (timeFrameHigh_percent >= entry_spike_percent ) {
+  //   return Number((open + (open * (entry_spike_percent/100))).toFixed(2));
+  // }
   return undefined;
+}
+
+function getMaxLossRiskPrice(data: IDataGapperUploadExtended, fibLevel: number, config: ISimulationEngineConfig): number {
+  const fibLevel0886 = extractFibLevel(fibLevel, data);
+  const open = data["Day 1 Open"];
+  const MaxLossPercent = config.spike_percent_risk;
+  const fibLevelRisk = Number((fibLevel0886 + (fibLevel0886 * (MaxLossPercent/100))).toFixed(2));
+  const openLevelRisk = Number((open + (open * (MaxLossPercent/100))).toFixed(2));
+  return config.risk_from_open ? openLevelRisk : fibLevelRisk;
+}
+
+function getMaxLossRiskPriceWithWiggleRoom(data: IDataGapperUploadExtended, fibLevel: number, config: ISimulationEngineConfig): number {
+  const wiggleRoom = config.wiggle_room;
+  const riskLevel = getMaxLossRiskPrice(data, fibLevel, config);
+  return Number((riskLevel + (riskLevel * (wiggleRoom/100))).toFixed(2));
 }
 
 function calculateFirstExitPriceClose(entryPrice: number | undefined, timeFrameRiskPrice: number, data: IDataGapperUploadExtended, config: ISimulationEngineConfig): number | undefined {
   if (entryPrice) {
-    const maxLossRiskPrice = Number((data["Day 1 Open"] + (data["Day 1 Open"] * (config.spike_percent_risk/100))).toFixed(2));
+    const maxLossRiskPrice = getMaxLossRiskPriceWithWiggleRoom(data, 0.886, config)
     if (timeFrameRiskPrice > maxLossRiskPrice) {
-      return maxLossRiskPrice;
+      return addSlippage(maxLossRiskPrice, config, 'exit');
     }
     if (data["Day 1 High"] > timeFrameRiskPrice) {
-      return timeFrameRiskPrice;
+      return addSlippage(timeFrameRiskPrice, config, 'exit');
     }
     return data["Day 1 Close"];
   }
@@ -93,10 +127,10 @@ function calculateFirstExitPriceLows(entryPrice: number | undefined, timeFrameRi
       }
       const maxLossRiskPrice = Number((data["Day 1 Open"] + (data["Day 1 Open"] * (config.spike_percent_risk/100))).toFixed(2));
       if (timeFrameRiskPrice > maxLossRiskPrice) {
-        return maxLossRiskPrice;
+        return addSlippage(maxLossRiskPrice, config, 'exit');
       }
       if (data["Day 1 High"] > timeFrameRiskPrice) {
-        return timeFrameRiskPrice;
+        return addSlippage(timeFrameRiskPrice, config, 'exit');;
       }
       return data["Day 1 Close"];
     }
@@ -107,21 +141,21 @@ function calculateFirstExitPriceLows(entryPrice: number | undefined, timeFrameRi
 
 function calculateTotalShares(entryPrice: number | undefined, equity: number, config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
   if (entryPrice) {
-    const open = data["Day 1 Open"];
-    const riskPrice = Number((open + (open * (config.spike_percent_risk/100))).toFixed(2));
+    const riskPrice = getMaxLossRiskPrice(data, 0.786, config);
     const portfolioEquity = equity;
     const dollarRisk = Number((portfolioEquity * (config.first_risk/100)).toFixed(0));
-    const newEntryPrice = config.first_open_size ? data["Day 1 Open"] : entryPrice;
-    return Number((dollarRisk/(riskPrice-newEntryPrice)).toFixed(0));
+    const actualDollarRisk = dollarRisk <= config.cappedRisk ? dollarRisk : config.cappedRisk;
+    return Number((actualDollarRisk/(riskPrice-entryPrice)).toFixed(0));
   }
   return 0;
 }
 
-function calculateTotalSharesForLocate(premktHigh:number, equity: number, config: ISimulationEngineConfig): number {
+function calculateTotalSharesForLocate(premktHigh:number, equity: number, config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
   const portfolioEquity = equity;
-  const riskPrice = Number((premktHigh + (premktHigh * (config.spike_percent_risk/100))).toFixed(2));
+  const riskPrice = getMaxLossRiskPrice(data, 0.786, config);
   const dollarRisk = Number((portfolioEquity * (config.first_risk/100)).toFixed(0));
-  return Number((dollarRisk/(riskPrice-premktHigh)).toFixed(0)) * 2;
+  const actualDollarRisk = dollarRisk <= config.cappedRisk ? dollarRisk : config.cappedRisk;
+  return Number((actualDollarRisk/(riskPrice-premktHigh)).toFixed(0)) * 2;
 }
 
 function perShareLocateCost(pmhPrice: number, config: ISimulationEngineConfig): number {

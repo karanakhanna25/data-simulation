@@ -14,6 +14,12 @@
     <label>0.786 Fib - 11:30am close%: {{FibLevelToClose1130AMFadePercent(0.786)}}%</label>
     <label>Open - Close%: {{OpenToCloseFadePercent()}}%</label>
   </div>
+  <div class="stock-stats">
+    <label>10am close - close%: {{Close10ToEODCloseFadePercent()}}%</label>
+    <label>10:30am close - close%: {{Close1030ToEODCloseFadePercent()}}%</label>
+    <label>11:00am close - close%: {{Close11ToEODCloseFadePercent()}}%</label>
+    <label>11:30am close - close%: {{Close1130ToEODCloseFadePercent()}}%</label>
+  </div>
 </div>
 <tv-lightweight-chart *ngIf="!!ticker && !!date" [ticker]="ticker" [date]="date" [data]="data"></tv-lightweight-chart>
 <div class="action-buttons">

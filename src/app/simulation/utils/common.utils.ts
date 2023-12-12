@@ -21,3 +21,21 @@ export function getRiskTimeFrameHighValue(timeFrame: number, data: IDataGapperUp
       return data["Day 1 High"];
   }
 }
+
+export function getOpenRelativeToFibLevel(data: IDataGapperUploadExtended): 'Between' | 'Under' | 'Above' | undefined {
+  const fibLevel0786 = extractFibLevel(0.786, data);
+  const fibLevel0886 = extractFibLevel(0.886, data);
+  const open = data["Day 1 Open"];
+  if (open >= fibLevel0786 && open <= fibLevel0886) {
+    return 'Between'
+  }
+
+  if (open > fibLevel0886) {
+    return 'Above';
+  }
+
+  if (open < fibLevel0786) {
+    return 'Under'
+  }
+  return undefined;
+}
