@@ -1,17 +1,22 @@
 export interface ISimulationEngineConfig {
   equity: number,
-  slippage: number,
+  entry_slippage: number,
+  exit_slippage: number,
   locate: number,
   cappedRisk: number,
   riskTimeFrame: number,
+  risk_from: string,
   wiggle_room: number,
-  first_risk: number,
-  first_entry_spike: number,
-  risk_from_open: boolean,
+  max_loss_risk_percent: number,
+  locate_offset: number,
+  enter_at: string,
+  spike_percent_to_enter: number,
+  pyramid: string,
+  no_extra_locates: boolean,
   exit_lows?: number,
   shares_exit_close: number,
   shares_exit_lows: number,
-  spike_percent_risk: number,
+  max_loss_spike_percent: number,
 }
 
 

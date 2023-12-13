@@ -8,18 +8,23 @@ export interface ISimulationEngineConfigState {
 export const simulationEngineConfigInitialState = {
   config: {
     equity: 30000,
-    slippage: 3,
+    entry_slippage: 3,
+    exit_slippage: 2,
     locate: 2,
     cappedRisk: 25000,
     riskTimeFrame: 90,
-    first_risk: 10,
-    first_entry_spike: 0,
+    risk_from: 'risk from 0.886 Fib level',
+    wiggle_room: 5,
+    max_loss_risk_percent: 10,
+    locate_offset: 3,
+    enter_at: '0.786 fib or push from open',
+    spike_percent_to_enter: 0,
+    pyramid: '10:30am + 11am combo',
+    no_extra_locates: true,
     first_exit_close: true,
-    risk_from_open: false,
     shares_exit_close: 100,
     shares_exit_lows: 0,
-    wiggle_room: 5,
-    spike_percent_risk: 55
+    max_loss_spike_percent: 55
   },
   filter: {}
 }

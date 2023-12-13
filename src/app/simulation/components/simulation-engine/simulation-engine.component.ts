@@ -30,17 +30,46 @@ export class SimulationEngineComponent implements OnInit {
     {value: 999, label: 'Max Loss'}
   ]
 
+  readonly riskFromoptions = [
+    {value: 'risk from open', label: 'risk from open'},
+    {value: 'risk from 0.886 Fib level', label: 'risk from 0.886 fib level'},
+    {value: 'risk from 0.786 Fib level', label: 'risk from 0.786 fib level'},
+    {value: 'risk from pmh', label: 'risk from pmh'},
+    {value: 'use pmh as risk', label: 'use pmh as risk'}
+  ]
+
+  readonly enterAtOptions = [
+    {value: 'push from open', label: 'push from open'},
+    {value: '0.786 fib or push from open', label: '0.786 fib or push from open'},
+    {value: '0.886 or push from open', label: '0.886 or push from open'},
+    {value: 'enter at pmh', label: 'enter at pmh'}
+  ]
+
+  readonly pyramidOptions = [
+    {value: 'add at 10am close', label: 'add at 10am close'},
+    {value: 'add at 10:30am close', label: 'add at 10:30am close'},
+    {value: 'add at 11am close', label: 'add at 11am close'},
+    {value: 'add at 11:30am close', label: 'add at 11:30am close'},
+    {value: '10:30am + 11am combo', label: '10:30am + 11am combo'},
+    {value: 'no adds', label: 'no adds'}
+  ]
+
   readonly form = this._fb.group({
     equity: [simulationEngineConfigInitialState.config.equity, Validators.required],
-    slippage: [simulationEngineConfigInitialState.config.slippage, Validators.required],
+    entry_slippage: [simulationEngineConfigInitialState.config.entry_slippage, Validators.required],
+    exit_slippage: [simulationEngineConfigInitialState.config.exit_slippage, Validators.required],
     locate: [simulationEngineConfigInitialState.config.locate, Validators.required],
     cappedRisk: [simulationEngineConfigInitialState.config.cappedRisk, Validators.required],
     riskTimeFrame: [simulationEngineConfigInitialState.config.riskTimeFrame, Validators.required],
+    risk_from: [simulationEngineConfigInitialState.config.risk_from, Validators.required],
     wiggle_room: [simulationEngineConfigInitialState.config.wiggle_room, Validators.required],
-    spike_percent_risk: [simulationEngineConfigInitialState.config.spike_percent_risk, Validators.required],
-    first_risk:[simulationEngineConfigInitialState.config.first_risk, Validators.required],
-    first_entry_spike: [0, Validators.required],
-    risk_from_open: [simulationEngineConfigInitialState.config.risk_from_open, Validators.required],
+    max_loss_spike_percent: [simulationEngineConfigInitialState.config.max_loss_spike_percent, Validators.required],
+    locate_offset: [simulationEngineConfigInitialState.config.locate_offset, Validators.required],
+    enter_at: [simulationEngineConfigInitialState.config.enter_at, Validators.required],
+    max_loss_risk_percent:[simulationEngineConfigInitialState.config.max_loss_risk_percent, Validators.required],
+    spike_percent_to_enter: [simulationEngineConfigInitialState.config.spike_percent_to_enter, Validators.required],
+    pyramid: [simulationEngineConfigInitialState.config.pyramid, Validators.required],
+    no_extra_locates: [simulationEngineConfigInitialState.config.no_extra_locates, Validators.required],
     exit_lows: [],
     shares_exit_close: [simulationEngineConfigInitialState.config.shares_exit_close, Validators.required],
     shares_exit_lows: [simulationEngineConfigInitialState.config.shares_exit_lows, Validators.required]
@@ -49,6 +78,7 @@ export class SimulationEngineComponent implements OnInit {
   constructor(private _fb: FormBuilder, private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
 
   ngOnInit(): void {
+    console.log(this.form.value)
     this._configStore.updateSimulationConfig(this.form.value as unknown as ISimulationEngineConfig);
 
     this._updateExitLowPercentShareControl(this._percentSharesExitCloseControl().value);
@@ -73,10 +103,9 @@ export class SimulationEngineComponent implements OnInit {
 
 
     this.form.valueChanges.pipe(
-      map(data => data as unknown as ISimulationEngineConfig),
       untilDestroyed(this)
-    ).subscribe((config: ISimulationEngineConfig) => {
-      this._configStore.updateSimulationConfig(config);
+    ).subscribe((config) => {
+      this._configStore.updateSimulationConfig(config as ISimulationEngineConfig);
     })
   }
 
@@ -133,7 +162,7 @@ export class SimulationEngineComponent implements OnInit {
   }
 
   private _firstSpikeEntryPercentControl(): AbstractControl<number> {
-    return this.form.get('first_entry_spike') as AbstractControl;
+    return this.form.get('spike_percent_to_enter') as AbstractControl;
   }
 
   portfolio_equity(): number[] {

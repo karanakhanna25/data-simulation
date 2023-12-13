@@ -18,11 +18,15 @@
     flex-wrap: wrap;
   }
 
+  .risk-from {
+    width: 180px;
+  }
+
   .input-checkbox-label {
     align-items: center;
   }
 
-  .entry-1 {
+  .entry {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -34,6 +38,12 @@
       }
       .entry-spike {
         width: 48px;
+      }
+      .enter-at {
+        width: 200px;
+      }
+      .pyramid {
+        width: 180px;
       }
     }
   }

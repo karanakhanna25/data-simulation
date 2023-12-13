@@ -5,8 +5,12 @@
       <label>Start Equity</label>
     </div>
     <div class="input-label">
-      <input type="number" formControlName="slippage" class="slippage" [min]="0" />
-      <label>Slippage</label>
+      <input type="number" formControlName="entry_slippage" class="slippage" [min]="0" />
+      <label> Entry Slippage</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="exit_slippage" class="slippage" [min]="0" />
+      <label>Exit Slippage</label>
     </div>
     <div class="input-label">
       <input type="number" formControlName="locate" class="locate" [min]="0" />
@@ -27,24 +31,46 @@
       <label>Wiggle Room</label>
     </div>
     <div class="input-label">
-      <input type="number" formControlName="spike_percent_risk" class="wiggle-room" [min]="0" />
-      <label>Max spike% Risk</label>
+      <input type="number" formControlName="max_loss_spike_percent" class="wiggle-room" [min]="0" />
+      <label>Max Loss Spike %</label>
     </div>
-    <div class="input-label input-checkbox-label">
-      <input type="checkbox" formControlName="risk_from_open" class="checkbox" />
-      <label>Risk From Open</label>
+    <div class="select-label">
+      <select class="risk-from" formControlName="risk_from">
+        <option *ngFor="let option of riskFromoptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+      </select>
+      <label>Risk From</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="max_loss_risk_percent" class="max-loss-risk" [min]="0" [max]="100"/>
+      <label>Max Loss Risk %</label>
+    </div>
+    <div class="input-label">
+      <input type="number" formControlName="locate_offset" class="max-loss-risk" [min]="0" [max]="100"/>
+      <label>Locate Offset</label>
     </div>
   </div>
-  <div class="entry-1">
-    <label class="title">First entry</label>
+  <div class="entry">
+    <label class="title">Entry</label>
     <div class="entry-exit-controls">
       <div class="input-label">
-        <input type="number" formControlName="first_entry_spike" class="entry-spike"/>
-        <label>Entry Spike</label>
+        <input type="number" formControlName="spike_percent_to_enter" class="entry-spike"/>
+        <label>Spike% to enter</label>
       </div>
-      <div class="input-label">
-        <input type="number" formControlName="first_risk" class="max-loss-risk" [min]="0" [max]="100"/>
-        <label>Max Loss Risk %</label>
+      <div class="select-label">
+        <select class="enter-at" formControlName="enter_at">
+          <option *ngFor="let option of enterAtOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+        </select>
+        <label>Enter At</label>
+      </div>
+      <div class="select-label">
+        <select class="pyramid" formControlName="pyramid">
+          <option *ngFor="let option of pyramidOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+        </select>
+        <label>Pyramid</label>
+      </div>
+      <div class="input-label input-checkbox-label">
+        <input type="checkbox" formControlName="no_extra_locates" class="checkbox" />
+        <label>No Extra Locates</label>
       </div>
     </div>
   </div>
@@ -71,5 +97,5 @@
   </div>
 </section>
 <section class="bottom-section">
-  <line-chart [data]="equity() || []" #lineChart></line-chart>
+  <!-- <line-chart [data]="equity() || []" #lineChart></line-chart> -->
 </section>
