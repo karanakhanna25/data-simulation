@@ -20,4 +20,5 @@ export class FirebaseService {
   retrieveRecords(): Observable<{[key: string]: any}> {
    return this._http.get<{[key: string]: any}>(this.url)
   }
+
 }

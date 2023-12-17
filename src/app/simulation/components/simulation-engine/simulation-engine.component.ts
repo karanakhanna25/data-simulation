@@ -72,7 +72,7 @@ export class SimulationEngineComponent implements OnInit {
     no_extra_locates: [simulationEngineConfigInitialState.config.no_extra_locates, Validators.required],
     exit_lows: [],
     shares_exit_close: [simulationEngineConfigInitialState.config.shares_exit_close, Validators.required],
-    shares_exit_lows: [simulationEngineConfigInitialState.config.shares_exit_lows, Validators.required]
+    shares_exit_lows: [simulationEngineConfigInitialState.config.shares_exit_lows, Validators.required],
   });
 
   constructor(private _fb: FormBuilder, private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}

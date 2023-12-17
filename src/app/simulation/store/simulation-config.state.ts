@@ -16,7 +16,7 @@ export const simulationEngineConfigInitialState = {
     risk_from: 'risk from 0.886 Fib level',
     wiggle_room: 5,
     max_loss_risk_percent: 10,
-    locate_offset: 3,
+    locate_offset: 2,
     enter_at: '0.786 fib or push from open',
     spike_percent_to_enter: 0,
     pyramid: '10:30am + 11am combo',
@@ -24,7 +24,7 @@ export const simulationEngineConfigInitialState = {
     first_exit_close: true,
     shares_exit_close: 100,
     shares_exit_lows: 0,
-    max_loss_spike_percent: 55
+    max_loss_spike_percent: 55,
   },
   filter: {}
 }

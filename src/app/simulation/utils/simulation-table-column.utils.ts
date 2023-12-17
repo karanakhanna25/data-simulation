@@ -359,6 +359,14 @@ export function agGridColumnDefs(): ColDef[] {
       width: 130
     },
     {
+      headerName: IDataGapperUploadExtendedFields['Inst Own'],
+      field: IDataGapperUploadExtendedFields['Inst Own'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 130
+    },
+    {
       headerName: IDataGapperUploadExtendedFields.Industry,
       field: IDataGapperUploadExtendedFields.Industry,
       filter: IndustryFilter,

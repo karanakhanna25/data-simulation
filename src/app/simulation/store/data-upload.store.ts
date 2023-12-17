@@ -11,7 +11,7 @@ import { extractFibLevel, getOpenRelativeToFibLevel } from "@app-simulation/util
 @Injectable()
 export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
-  readonly gusData = this.selectSignal(state => (state.allRecords || []));
+  readonly gusData = this.selectSignal(state => (this._filterBrokenTickers(state.allRecords || [])));
 
   readonly equity = this.selectSignal(state => [...[this._configStore.simulationEngineConfig().equity], ...state.visibleRows.map(g => g.Equity)]);
   readonly config = this._configStore.simulationEngineConfig;
@@ -122,5 +122,10 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
       'Broke 11am High': g["Day 1 High"] > g["Day 1 90Min High"] ? 1 : 0,
       '60Min High > 30Min High': g["Day 1 60Min High"] > g["Day 1 30Min High"] ? 1 : 0
     }))
+  }
+
+  private _filterBrokenTickers(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
+    const ignoreIds = ['2023-12-01-NEXI']
+    return data.filter(d => !ignoreIds.includes(d.id));
   }
 }

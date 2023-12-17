@@ -73,7 +73,8 @@ export interface IDataGapperUploadExtended extends IDataGapper {
   '60Min Close < Open': 1 | 0,
   '30Min Close < Open': 1 | 0,
   'Broke 11am High': 1 | 0,
-  '60Min High > 30Min High': 1 | 0
+  '60Min High > 30Min High': 1 | 0,
+  'Inst Own': number
 }
 
 export enum IDataGapperUploadExtendedFields {
@@ -125,5 +126,6 @@ export enum IDataGapperUploadExtendedFields {
   '60Min Close < Open' = '60Min Close < Open',
   '30Min Close < Open' = '30Min Close < Open',
   'Broke 11am High' = 'Broke 11am High',
-  '60Min High > 30Min High' = '60Min High > 30Min High'
+  '60Min High > 30Min High' = '60Min High > 30Min High',
+  'Inst Own' = 'Inst Own'
 }

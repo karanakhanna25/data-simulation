@@ -18,10 +18,59 @@ export function getEntryPrice(config: ISimulationEngineConfig, data: IDataGapper
   }
 }
 
-export function getEntryPriceWithSlippage(config: ISimulationEngineConfig, data: IDataGapperUploadExtended) : number | undefined {
-  const entryPrice = getEntryPrice(config, data);
+export function addSlippageToEntry(entryPrice:number | undefined, config: ISimulationEngineConfig) : number | undefined {
   const slippage = config.entry_slippage;
   return entryPrice ? Number((entryPrice - (entryPrice * (slippage/100))).toFixed(2)) : undefined
+}
+
+export function getAvgEntryPrice(initialEntryPrice: number | undefined, initialShareCount: number, pyramidEntryPrice: number, pyramidShareCount: number): number | undefined {
+  if (initialEntryPrice) {
+    const totalDollarFirstEntry = initialEntryPrice * initialShareCount;
+    const totalDollarSecondEntry = pyramidEntryPrice * pyramidShareCount;
+    const totalShares = initialShareCount + pyramidShareCount;
+    return Number(((totalDollarFirstEntry + totalDollarSecondEntry)/ totalShares).toFixed(2));
+  }
+  return undefined;
+}
+
+export function getPyramidEntryPrice(config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
+  const pyramidAt = config.pyramid;
+  switch(pyramidAt) {
+    case 'add at 10am close':
+      return data["Day 1 30Min Close"];
+    case 'add at 10:30am close':
+      return data["Day 1 60Min Close"];
+    case 'add at 11am close':
+      return data["Day 1 90Min Close"];
+    case 'add at 11:30am close':
+      return data["Day 1 120Min Close"];
+    case '10:30am + 11am combo':
+    default:
+      if (data["Day 1 60Min Close"] < data["Day 1 Open"]) {
+        return data["Day 1 60Min Close"];
+      }
+      return data["Day 1 90Min Close"];
+  }
+}
+
+export function getPyramidEntryPriceRisk(config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
+  const pyramidAt = config.pyramid;
+  switch(pyramidAt) {
+    case 'add at 10am close':
+      return data["Day 1 30Min High"];
+    case 'add at 10:30am close':
+      return data["Day 1 60Min High"];
+    case 'add at 11am close':
+      return data["Day 1 90Min High"];
+    case 'add at 11:30am close':
+      return data["Day 1 120Min High"];
+    case '10:30am + 11am combo':
+    default:
+      if (data["Day 1 60Min Close"] < data["Day 1 Open"]) {
+        return data["Day 1 60Min High"];
+      }
+      return data["Day 1 90Min High"];
+  }
 }
 
 function getPushPercentEntryPriceFromOpen(config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {

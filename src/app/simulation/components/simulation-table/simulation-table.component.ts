@@ -81,6 +81,7 @@ export class SimulationTableComponent implements OnInit {
             ["Day 1 Date"]: new Date(formatDate(d['Day 1 Date'], 'MM-dd-yyyy', 'en-US')) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
         this._store.uploadGusData({
           data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
+          // data: [],
           context: 'gus',
           type: 'append'
         });
@@ -164,7 +165,6 @@ export class SimulationTableComponent implements OnInit {
     evt.api.setGridOption('pinnedTopRowData', [...this._generatePinnedAverageRowData(), ...this._generatePinnedMedianRowData()]);
     this._configStore.updateFilter(this.gripApi.getFilterModel());
     this._store.runPnlCalculations(this.filteredRows());
-
   }
 
   onSortChanged(evt: SortChangedEvent): void {

@@ -11,7 +11,7 @@ import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-co
 export class AppComponent  {
 
   navLinks = [
-    { path: '/simulation-gus', label: 'Simulation - GUS' },
+    { path: '/simulation-gus', label: 'Simulation - GUS (75%+)' },
   ];
 
   constructor() {}
