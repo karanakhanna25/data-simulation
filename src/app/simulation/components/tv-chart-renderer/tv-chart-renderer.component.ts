@@ -5,14 +5,14 @@ import { Component, OnInit, ViewChild, ElementRef, Input } from '@angular/core';
 import { PolygonService } from '@app-simulation/services/polygon.service';
 import { IDataGapperUploadExtended } from '@app-simulation/simulation.model';
 import { extractFibLevel } from '@app-simulation/utils/common.utils';
-import { createChart, CandlestickSeriesPartialOptions, UTCTimestamp, LineStyle } from 'lightweight-charts';
+import { createChart, CandlestickSeriesPartialOptions, UTCTimestamp, LineStyle, DeepPartial, TimeChartOptions, HistogramStyleOptions, SeriesOptionsCommon } from 'lightweight-charts';
 import { take } from 'rxjs';
 
 
 
 @Component({
   selector: 'tv-lightweight-chart',
-  template: `<div #chartContainer style="width: 800px; height: 400px;"></div>`,
+  templateUrl: 'tv-chart-renderer.component.html',
 })
 export class TVLightweightChartComponent implements OnInit {
 
@@ -25,7 +25,8 @@ export class TVLightweightChartComponent implements OnInit {
   @Input()
   data!: IDataGapperUploadExtended;
 
-  @ViewChild('chartContainer') chartContainer!: ElementRef;
+  @ViewChild('candleStickChartContainer') candleChartContainer!: ElementRef;
+  @ViewChild('volumeChartContainer') volumeChartContainer!: ElementRef;
 
   constructor(private polygonService: PolygonService) {}
 
@@ -33,15 +34,41 @@ export class TVLightweightChartComponent implements OnInit {
     this.polygonService.getIntradayData(this.ticker, this.date).pipe(
       take(1)
     ).subscribe(data => {
-      const chart = createChart(this.chartContainer.nativeElement, { width: 800, height: 400, timeScale: {
+      const candleStickChart = createChart(this.candleChartContainer.nativeElement, {
+        width: 800,
+        height: 400,
+        timeScale: {
         timeVisible: true,
         secondsVisible: false, // set true if you want to see seconds
-      }, });
-      const candleSeries = chart.addCandlestickSeries({
 
+      },
+    } as DeepPartial<TimeChartOptions>);
+
+    const volumeSeries = candleStickChart.addHistogramSeries({
+      color: '#26a69a',
+      priceScaleId: 'left',
+     } as DeepPartial<HistogramStyleOptions & SeriesOptionsCommon>);
+
+      const candleSeries = candleStickChart.addCandlestickSeries({
+        priceScaleId: 'right'
       } as CandlestickSeriesPartialOptions);
 
-      const formattedData = data.results.map(item => {
+       volumeSeries.priceScale().applyOptions({
+        visible: true,
+        scaleMargins: {
+          top: 0.7, // highest point of the series will be 70% away from the top
+          bottom: 0, // lowest point will be at the very bottom
+        },
+      });
+
+      candleSeries.priceScale().applyOptions({
+        scaleMargins: {
+          top: 0.1, // highest point of the series will be 10% away from the top
+          bottom: 0.2, // lowest point will be 40% away from the bottom
+        },
+      });
+
+      const formattedData = (data.results || []).map(item => {
         // Convert to UTC
         const estTimestamp = item.t + (this._offset(this.date) * 60 * 60 * 1000); // Subtract 5 hours
         return {
@@ -49,7 +76,8 @@ export class TVLightweightChartComponent implements OnInit {
           open: item.o, // Opening price
           high: item.h, // High price
           low: item.l, // Low price
-          close: item.c // Closing price
+          close: item.c, // Closing price
+          volume: item.v
         }
       });
       candleSeries.createPriceLine({
@@ -125,7 +153,21 @@ export class TVLightweightChartComponent implements OnInit {
       });
 
       candleSeries.setData(formattedData);
+      volumeSeries.setData(formattedData.map(f => ({time: f.time, value: f.volume})));
     });
+  }
+
+  formatNumber(num: number) {
+    if (num >= 1000000000) {
+        return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'G';
+    }
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    }
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    }
+    return num;
   }
 
   getRiskFromFibLevel(level: number, risk_percent: number, wiggleRoom?: number): number {
