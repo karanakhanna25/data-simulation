@@ -1,24 +1,4 @@
-<mat-drawer-container class="simulation-drawer" autosize>
-  <mat-drawer #drawer [mode]="'side'" [opened]="true">
-    <section class="left-section left-section-content" >
-      <div class="container">
-        <simulation-engine></simulation-engine>
-      </div>
-      <div class="expand-collapse-icon">
-        <mat-icon (click)="drawer.toggle()">arrow_back</mat-icon>
-      </div>
-    </section>
-  </mat-drawer>
-  <mat-drawer-content>
-    <section class="left-section" *ngIf="!drawer.opened">
-      <div class="container"></div>
-      <div class="expand-collapse-icon">
-        <mat-icon (click)="drawer.toggle()">arrow_forward</mat-icon>
-      </div>
-    </section>
-    <section class="right-section">
-      <quant-sim-simulation-table></quant-sim-simulation-table>
-    </section>
-  </mat-drawer-content>
-</mat-drawer-container>
-
+<drawer-container>
+  <simulation-engine left-section></simulation-engine>
+  <quant-sim-simulation-table right-section></quant-sim-simulation-table>
+</drawer-container>

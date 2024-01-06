@@ -1,0 +1,24 @@
+<mat-drawer-container class="simulation-drawer" autosize>
+  <mat-drawer #drawer [mode]="'side'" [opened]="true">
+    <section class="left-section left-section-content" >
+      <div class="container">
+        <ng-content select="[left-section]"></ng-content>
+      </div>
+      <div class="expand-collapse-icon">
+        <mat-icon (click)="drawer.toggle()">arrow_back</mat-icon>
+      </div>
+    </section>
+  </mat-drawer>
+  <mat-drawer-content>
+    <section class="left-section" *ngIf="!drawer.opened">
+      <div class="container"></div>
+      <div class="expand-collapse-icon">
+        <mat-icon (click)="drawer.toggle()">arrow_forward</mat-icon>
+      </div>
+    </section>
+    <section class="right-section">
+      <ng-content select="[right-section]"></ng-content>
+    </section>
+  </mat-drawer-content>
+</mat-drawer-container>
+

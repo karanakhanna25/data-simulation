@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { SimulationDataStore } from '@app-simulation/store/data-upload.store';
-import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-config.store';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +10,7 @@ export class AppComponent  {
 
   navLinks = [
     { path: '/simulation-gus', label: 'Simulation - GUS (75%+)' },
+    { path: '/simulation-day-2-gus', label: 'Simulation - Day 2 GUS (10+%)' },
   ];
 
   constructor() {}

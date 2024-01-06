@@ -9,6 +9,13 @@ const routes: Routes = [
         (m) => m.SimulationdModule
       )
   },
+  {
+    path: 'simulation-day-2-gus',
+    loadChildren: () =>
+      import('@app-simulation-day2-gus/simulation-day2-gus.module').then(
+        (m) => m.SimulationdModule
+      )
+  },
 
 ];
 
