@@ -120,7 +120,8 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
       '60Min Close < Open': g["Day 1 60Min Close"] < g["Day 1 Open"] ? 1 : 0,
       '30Min Close < Open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
       'Broke 11am High': g["Day 1 High"] > g["Day 1 90Min High"] ? 1 : 0,
-      '60Min High > 30Min High': g["Day 1 60Min High"] > g["Day 1 30Min High"] ? 1 : 0
+      '60Min High > 30Min High': g["Day 1 60Min High"] > g["Day 1 30Min High"] ? 1 : 0,
+      'Broke 10:30am High': g["Day 1 High"] > g["Day 1 60Min High"] ? 1 : 0
     }))
   }
 

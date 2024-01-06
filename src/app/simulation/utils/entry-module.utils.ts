@@ -15,6 +15,14 @@ export function getEntryPrice(config: ISimulationEngineConfig, data: IDataGapper
       return getEntryFromFibLevel(0.886, config, data);
     case 'enter at pmh':
       return getPushPercentEntryPrice(timeFrameHigh, data["Day 1 PM High"]);
+    case 'enter at 10am':
+      return data["Day 1 30Min Close"];
+    case 'enter at 10:30am':
+      return data["Day 1 60Min Close"];
+    case 'enter at 11:00am':
+      return data["Day 1 90Min Close"];
+    case 'enter at 9:45am':
+      return data["Day 1 15Min Close"];
   }
 }
 

@@ -35,14 +35,18 @@ export class SimulationEngineComponent implements OnInit {
     {value: 'risk from 0.886 Fib level', label: 'risk from 0.886 fib level'},
     {value: 'risk from 0.786 Fib level', label: 'risk from 0.786 fib level'},
     {value: 'risk from pmh', label: 'risk from pmh'},
-    {value: 'use pmh as risk', label: 'use pmh as risk'}
+    {value: 'use pmh as risk', label: 'use pmh as risk'},
   ]
 
   readonly enterAtOptions = [
     {value: 'push from open', label: 'push from open'},
     {value: '0.786 fib or push from open', label: '0.786 fib or push from open'},
     {value: '0.886 or push from open', label: '0.886 or push from open'},
-    {value: 'enter at pmh', label: 'enter at pmh'}
+    {value: 'enter at pmh', label: 'enter at pmh'},
+    {value: 'enter at 9:45am', label: 'enter at 9:45am'},
+    {value: 'enter at 10am', label: 'enter at 10am'},
+    {value: 'enter at 10:30am', label: 'enter at 10:30am'},
+    {value: 'enter at 11:00am', label: 'enter at 11:00am'}
   ]
 
   readonly pyramidOptions = [
