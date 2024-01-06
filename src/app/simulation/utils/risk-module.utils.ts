@@ -20,6 +20,10 @@ export function getMaxLossRiskLevel(config: ISimulationEngineConfig, data: IData
       return calculateRisk(data["Day 1 PM High"], config);
     case 'use pmh as risk':
       return data["Day 1 PM High"];
+    case 'risk from 9:45 close':
+      return calculateRisk(data["Day 1 15Min Close"], config)
+    case 'risk from 9:35 close':
+      return calculateRisk(data["Day 1 5Min Close"], config)
   }
 }
 

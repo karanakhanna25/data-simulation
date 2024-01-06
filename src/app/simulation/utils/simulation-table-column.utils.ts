@@ -433,6 +433,13 @@ export function agGridColumnDefs(): ColDef[] {
       width: 180
     },
     {
+      headerName: IDataGapperUploadExtendedFields['Broke 9:45am High'],
+      field: IDataGapperUploadExtendedFields['Broke 9:45am High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
       headerName: IDataGapperUploadExtendedFields['Broke 10:30am High'],
       field: IDataGapperUploadExtendedFields['Broke 10:30am High'],
       cellClass: 'center-align',
