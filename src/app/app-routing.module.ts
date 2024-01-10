@@ -13,7 +13,7 @@ const routes: Routes = [
     path: 'simulation-day-2-gus',
     loadChildren: () =>
       import('@app-simulation-day2-gus/simulation-day2-gus.module').then(
-        (m) => m.SimulationdModule
+        (m) => m.SimulationDay2GusModule
       )
   },
 

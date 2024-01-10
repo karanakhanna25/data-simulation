@@ -1,5 +1,5 @@
 import { Component, OnInit, Signal, ViewChild } from "@angular/core";
-import { AbstractControl, FormBuilder, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { SimulationDataStore } from "@app-simulation/store/data-upload.store";
 import { ISimulationEngineConfig } from "@app-simulation/simulation.model";
 import { simulationEngineConfigInitialState } from "@app-simulation/store/simulation-config.state";
@@ -7,12 +7,16 @@ import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-co
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { map } from "rxjs";
 import { LineChartComponent } from "src/app/charts/line-chart/line-chart.component";
+import { CommonModule } from "@angular/common";
+import { ChartModule } from "src/app/charts/chart.module";
 
 @UntilDestroy()
 @Component({
   selector: 'simulation-engine',
   templateUrl: 'simulation-engine.component.html',
   styleUrl: 'simulation-engine.component.scss',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ChartModule]
 })
 export class SimulationEngineComponent implements OnInit {
 

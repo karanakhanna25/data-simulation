@@ -24,7 +24,7 @@ import { DrawerContainerComponent } from '@app-common/drawer-container/drawer-co
     SimulationTableComponent,
     ChartModalContainerComponent,
     TVLightweightChartComponent,
-    SimulationEngineComponent
+
   ],
   imports: [
     CommonModule,
@@ -38,7 +38,8 @@ import { DrawerContainerComponent } from '@app-common/drawer-container/drawer-co
     ChartModule,
     MatChipsModule,
     MatDialogModule,
-    DrawerContainerComponent
+    DrawerContainerComponent,
+    SimulationEngineComponent
   ],
   exports: [],
   providers: [FirebaseService, PolygonService],

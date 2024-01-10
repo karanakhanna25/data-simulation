@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  width: 100%;
+  gap: 16px;
+}
+
+.ag-theme-quartz {
+  height: calc(100vh - 130px);
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.top-section {
+  display: flex;
+}
+
+.upload-file {
+  display: none;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.upload-icon, .download-icon {
+  cursor: pointer;
+}
+
+.action-button {
+  display: flex;
+  gap: 4px;
+}
