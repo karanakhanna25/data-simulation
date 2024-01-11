@@ -76,7 +76,18 @@ export interface ISimualationDay2GUSExtended extends ISimulationDay2GUSData {
   '60Min High > 30Min High': 1 | 0,
   'Inst Own': number,
   'Broke 10:30am High': 1 | 0,
-  'Broke 9:45am High': 1 | 0
+  'Broke 9:45am High': 1 | 0,
+  'Day -1 Date': Date,
+  'Day -1 Open': number,
+  'Day -1 Close': number,
+  'Day -1 High': number,
+  'Day -1 Low': number,
+  'Day -1 Vol': number,
+  'Day -1 Gap %': number,
+  'Day -1 VW': number,
+  'Day -1 Market Cap': number,
+  'Day -1 Range': number,
+  'Day -1 Dollar Volume': number
 }
 
 export enum ISimulationDay2GUSDataExtendedFields {
@@ -114,7 +125,6 @@ export enum ISimulationDay2GUSDataExtendedFields {
   'Day 1 60Min Close' = 'Day 1 60Min Close',
   'Day 1 90Min Close' = 'Day 1 90Min Close',
   'Day 1 120Min Close' = 'Day 1 120Min Close',
-  'Day -1 Close' = 'Day -1 Close',
   'Industry' = 'Industry',
   'Sector' = 'Sector',
   'Market Cap' = 'Market Cap',
@@ -132,4 +142,15 @@ export enum ISimulationDay2GUSDataExtendedFields {
   'Broke 9:45am High' = 'Broke 9:45am High',
   '60Min High > 30Min High' = '60Min High > 30Min High',
   'Inst Own' = 'Inst Own',
+  'Day -1 Date' = 'Day -1 Date',
+  'Day -1 Open' = 'Day -1 Open',
+  'Day -1 Close' = 'Day -1 Close',
+  'Day -1 High' = 'Day -1 High',
+  'Day -1 Low' = 'Day -1 Low',
+  'Day -1 Vol' = 'Day -1 Vol',
+  'Day -1 Gap %' = 'Day -1 Gap %',
+  'Day -1 VW' = 'Day -1 VW',
+  'Day -1 Market Cap' = 'Day -1 Market Cap',
+  'Day -1 Range' = 'Day -1 Range',
+  'Day -1 Dollar Volume' = 'Day -1 Dollar Volume'
 }

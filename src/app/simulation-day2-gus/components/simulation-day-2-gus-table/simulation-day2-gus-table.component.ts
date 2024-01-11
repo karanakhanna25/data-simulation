@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, HostBinding, Signal } from "@angular/core";
 import { ColDef, FilterChangedEvent, GridApi, GridOptions, GridReadyEvent, RowClassParams, SortChangedEvent } from "ag-grid-community";
 import { day2GUSAgGridColumnDefs } from "./simulation-day-2-table.columns.utils";
 import { formatDate } from "@angular/common";
@@ -9,7 +9,7 @@ import { SimulationEngineConfigStore } from "@app-simulation/store/simulation-co
 import { avgPercentForTimeFrame, medianPercentForTimeFrame } from "@app-simulation/utils/calculations.utils";
 import { agGridColumnDefs } from "@app-simulation/utils/simulation-table-column.utils";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
-import { filter, take } from "rxjs";
+import { filter, map, take } from "rxjs";
 import { ISimualationDay2GUSExtended, ISimulationDay2GUSDataExtendedFields } from "@app-simulation-day2-gus/simulation-day2-gus.model";
 import * as XLSX from 'xlsx';
 
@@ -21,10 +21,22 @@ import * as XLSX from 'xlsx';
 })
 export class SimulationDay2GusTableComponent {
 
+  @HostBinding('class')
+  className = 'simulation-day2-gus-table'
+
   gripApi!: GridApi;
   columnApi!: any;
 
-  readonly rowData = this._store.gusData;
+  readonly day2GusData$ = this._store.gusData$.pipe(
+    map(d => d as ISimualationDay2GUSExtended[]),
+    map(data => data.map(d => ({
+      ...d,
+    'Day -1 Dollar Volume': d["Day -1 VW"] * d["Day -1 Vol"],
+    "Day -1 Range": Number(((d["Day -1 Close"] - d["Day -1 Open"])/d["Day -1 Open"] *100).toFixed(2))
+    })))
+  )
+
+
   readonly rowData$ = this._store.select(state => state.allRecords);
   readonly filterText = this._configStore.filterText;
   readonly closedRed = this._store.closedRedCount;

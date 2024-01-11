@@ -22,6 +22,6 @@
   (gridReady)="onGridReady($event)"
   [gridOptions]="gridoptions"
   class="ag-theme-quartz"
-  [rowData]="rowData()"
+  [rowData]="day2GusData$ | async"
   [columnDefs]="colDefs">
 </ag-grid-angular>

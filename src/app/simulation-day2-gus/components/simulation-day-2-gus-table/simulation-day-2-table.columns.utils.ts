@@ -382,6 +382,71 @@ export function day2GUSAgGridColumnDefs(): ColDef[] {
       tooltipField: ISimulationDay2GUSDataExtendedFields.Sector
     },
     {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Date'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Date'],
+      filter: 'agDateColumnFilter',
+
+      width: 120,
+      valueFormatter: dateValueFormatter
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Gap %'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Gap %'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Open'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Open'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Close'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Close'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 High'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 High'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Low'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Low'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Vol'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Vol'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 VW'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 VW'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Market Cap'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Market Cap'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 180
+    },
+    {
       headerName: ISimulationDay2GUSDataExtendedFields['pmh-open%'],
       field: ISimulationDay2GUSDataExtendedFields['pmh-open%'],
       filter: 'agNumberColumnFilter',
@@ -400,6 +465,20 @@ export function day2GUSAgGridColumnDefs(): ColDef[] {
     {
       headerName: ISimulationDay2GUSDataExtendedFields['Open wrt to Fib'],
       field: ISimulationDay2GUSDataExtendedFields['Open wrt to Fib'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Range'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Range'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Dollar Volume'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Dollar Volume'],
       cellClass: 'center-align',
       filter: true,
       width: 180
