@@ -83,6 +83,18 @@
           <label>% Shares Close</label>
         </div>
       </div>
+      <div class="time-based-exit">
+        <div class="input-label">
+          <input type="number" formControlName="shares_exit_time" class="entry-lows" [min]="0" [max]="100" />
+          <label>% Shares Time</label>
+        </div>
+        <div class="select-label">
+          <select class="risk-from" formControlName="exit_at_time">
+            <option *ngFor="let option of exitAtTimeOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+          </select>
+          <label>Risk From</label>
+        </div>
+      </div>
       <div class="exit-lows">
         <div class="input-label">
           <input type="number" formControlName="shares_exit_lows" class="entry-lows" [min]="0" [max]="100" />

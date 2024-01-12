@@ -25,6 +25,8 @@ export const simulationEngineConfigInitialState = {
     shares_exit_close: 100,
     shares_exit_lows: 0,
     max_loss_spike_percent: 55,
+    shares_exit_time: 0,
+    exit_at_time: 'exit at 11am'
   },
   filter: {}
 }

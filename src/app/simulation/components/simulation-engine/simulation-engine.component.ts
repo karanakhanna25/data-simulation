@@ -44,6 +44,12 @@ export class SimulationEngineComponent implements OnInit {
     {value: 'use pmh as risk', label: 'use pmh as risk'},
   ]
 
+  readonly exitAtTimeOptions = [
+    {value: 'exit at 10:30am', label: 'exit at 10:30am'},
+    {value: 'exit at 11am', label: 'exit at 11am'},
+    {value: 'exit at 11:30am', label: 'exit at 11:30am'},
+  ]
+
   readonly enterAtOptions = [
     {value: 'push from open', label: 'push from open'},
     {value: '0.786 fib or push from open', label: '0.786 fib or push from open'},
@@ -84,23 +90,20 @@ export class SimulationEngineComponent implements OnInit {
     exit_lows: [],
     shares_exit_close: [simulationEngineConfigInitialState.config.shares_exit_close, Validators.required],
     shares_exit_lows: [simulationEngineConfigInitialState.config.shares_exit_lows, Validators.required],
+    shares_exit_time: [simulationEngineConfigInitialState.config.shares_exit_time, Validators.required],
+    exit_at_time: [simulationEngineConfigInitialState.config.exit_at_time, Validators.required]
   });
 
   constructor(private _fb: FormBuilder, private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore) {}
 
   ngOnInit(): void {
-    console.log(this.form.value)
     this._configStore.updateSimulationConfig(this.form.value as unknown as ISimulationEngineConfig);
-
-    this._updateExitLowPercentShareControl(this._percentSharesExitCloseControl().value);
     this._updateExitLowControl(this._percentSharesExitLowControl().value);
-    this._updateExitClosePercentShareControl(this._percentSharesExitLowControl().value);
     this._updateFirstEntrySpike(this._percentSharesExitLowControl().value);
 
     this._percentSharesExitCloseControl()?.valueChanges.pipe(
       untilDestroyed(this)
     ).subscribe(data => {
-      this._updateExitLowPercentShareControl(data);
       this._updateExitLowControl(this._percentSharesExitLowControl().value);
     });
 
@@ -109,7 +112,6 @@ export class SimulationEngineComponent implements OnInit {
     ).subscribe(data => {
       this._updateFirstEntrySpike(data);
       this._updateExitLowControl(data);
-      this._updateExitClosePercentShareControl(data);
     });
 
 
@@ -126,24 +128,6 @@ export class SimulationEngineComponent implements OnInit {
       this._firstSpikeEntryPercentControl().disable();
     } else {
       this._firstSpikeEntryPercentControl().enable();
-    }
-  }
-
-  private _updateExitLowPercentShareControl(exitCloseValue: number): void {
-    if (exitCloseValue === 100) {
-      this._percentSharesExitLowControl().reset();
-      this._percentSharesExitLowControl().setValue(0, {emitEvent: false});
-    } else {
-      this._percentSharesExitLowControl().setValue(100 - exitCloseValue, {emitEvent: false});
-    }
-  }
-
-  private _updateExitClosePercentShareControl(exitLowValue: number): void {
-    if (exitLowValue === 100) {
-      this._percentSharesExitCloseControl().reset();
-      this._percentSharesExitCloseControl().setValue(0, {emitEvent: false});
-    } else {
-      this._percentSharesExitCloseControl().setValue(100 - exitLowValue, {emitEvent: false});
     }
   }
 

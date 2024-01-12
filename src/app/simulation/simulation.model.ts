@@ -17,6 +17,8 @@ export interface ISimulationEngineConfig {
   shares_exit_close: number,
   shares_exit_lows: number,
   max_loss_spike_percent: number,
+  shares_exit_time: number,
+  exit_at_time: string
 }
 
 

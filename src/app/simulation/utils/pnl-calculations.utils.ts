@@ -2,7 +2,7 @@ import { IDataGapperUploadExtended, ISimulationEngineConfig } from "@app-simulat
 import { getMaxLossRiskLevel, getRiskLevelWithWiggleRoom } from "./risk-module.utils";
 import { addSlippageToEntry, getAvgEntryPrice, getEntryPrice, getPyramidEntryPrice } from "./entry-module.utils";
 import { calculateLocateCostAfterPyramid, calculatePremartketLocateCost, getTotalSharesAfterPyramid, getTotalSharesAtEntry, premarketLocateShareCount } from "./share-locate-module.utils";
-import { calculateSharesToCoverAtClose, calculateSharesToCoverAtLows, getExitPriceForClose, getExitPriceForCloseWithSlippage, getExitPriceForLowWithSlippage, getExitPriceForLows } from "./exit-module.utils";
+import { calculateSharesToCoverAtClose, calculateSharesToCoverAtLows, calculateSharesToCoverAtTime, getExitPriceForClose, getExitPriceForCloseWithSlippage, getExitPriceForLowWithSlippage, getExitPriceForLows, getExitPriceForTimeWithSlippage } from "./exit-module.utils";
 
 export function calculatePnl(config: ISimulationEngineConfig, data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
   const globalEquity = [config.equity];
@@ -32,14 +32,24 @@ function deriveProfitLoss(g: IDataGapperUploadExtended, config: ISimulationEngin
 
   const pnlForClose = getPnlForclose(riskLevelWithWiggleRoom, totalSharesForTrade, averageEntryPricewithSlippage, config, g);
   const pnlForLow = getPnlForLows(riskLevelWithWiggleRoom, totalSharesForTrade, averageEntryPricewithSlippage, config, g);
+  const pnlForTimeCover = getPnlForTime(riskLevelWithWiggleRoom, totalSharesForTrade, averageEntryPricewithSlippage, config, g);
   const totalLocateCostForTrade = locateCostPremarket + locateCostAfterPyramid;
-   return pnlForClose + pnlForLow - totalLocateCostForTrade;
+   return pnlForClose + pnlForLow + pnlForTimeCover - totalLocateCostForTrade;
 }
 
 function getPnlForclose(maxLossLevel: number, totalShares: number, entryPriceWithSlippage: number | undefined, config: ISimulationEngineConfig, g: IDataGapperUploadExtended): number {
   if (entryPriceWithSlippage) {
     const exitPriceCloseWithSlippage = getExitPriceForCloseWithSlippage(maxLossLevel, config, g);
     const shareCountforClose = calculateSharesToCoverAtClose(totalShares, config);
+    return Number(((entryPriceWithSlippage - exitPriceCloseWithSlippage)*shareCountforClose).toFixed(2));
+  }
+  return 0;
+}
+
+function getPnlForTime(maxLossLevel: number, totalShares: number, entryPriceWithSlippage: number | undefined, config: ISimulationEngineConfig, g: IDataGapperUploadExtended): number {
+  if (entryPriceWithSlippage) {
+    const exitPriceCloseWithSlippage = getExitPriceForTimeWithSlippage(maxLossLevel, config, g);
+    const shareCountforClose = calculateSharesToCoverAtTime(totalShares, config);
     return Number(((entryPriceWithSlippage - exitPriceCloseWithSlippage)*shareCountforClose).toFixed(2));
   }
   return 0;

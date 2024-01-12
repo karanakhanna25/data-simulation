@@ -15,6 +15,36 @@ export function calculateSharesToCoverAtLows(totalSharesForTrade: number, config
   return Number((totalSharesForTrade * (percentShares/100)).toFixed(0));
 }
 
+export function calculateSharesToCoverAtTime(totalSharesForTrade: number, config: ISimulationEngineConfig): number {
+  const percentShares = config.shares_exit_time;
+  return Number((totalSharesForTrade * (percentShares/100)).toFixed(0));
+}
+
+export function getExitPriceForCoverAtTime(maxLossLevel: number, config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
+  const riskBreakPrice = getRiskBreakLevelPrice(maxLossLevel,data, config);
+  if (!riskBreakPrice) {
+    const exitAtTime = config.exit_at_time;
+    switch(exitAtTime) {
+      case 'exit at 10:30am':
+        return checkIfPriceAboveOpen(data["Day 1 60Min Close"], data);
+      case 'exit at 11am':
+        default:
+        return checkIfPriceAboveOpen(data["Day 1 90Min Close"], data);
+      case 'exit at 11:30am':
+        return checkIfPriceAboveOpen(data["Day 1 120Min Close"], data);
+    }
+  }
+  return riskBreakPrice;
+}
+
+function checkIfPriceAboveOpen(price: number, data: IDataGapperUploadExtended): number {
+  const openPrice = data["Day 1 Open"];
+  if (price >= openPrice) {
+    return data["Day 1 Close"];
+  }
+  return price;
+}
+
 export function getExitPriceForClose(maxLossLevel: number, config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
   const riskBreakPrice = getRiskBreakLevelPrice(maxLossLevel,data, config);
   if (!riskBreakPrice) {
@@ -26,6 +56,12 @@ export function getExitPriceForClose(maxLossLevel: number, config: ISimulationEn
 export function getExitPriceForCloseWithSlippage(maxLossLevel: number, config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
   const slippage = config.exit_slippage;
  const closePrice = getExitPriceForClose(maxLossLevel, config ,data);
+ return Number((closePrice + (closePrice * (slippage/100))).toFixed(2));
+}
+
+export function getExitPriceForTimeWithSlippage(maxLossLevel: number, config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
+  const slippage = config.exit_slippage;
+ const closePrice = getExitPriceForCoverAtTime(maxLossLevel, config ,data);
  return Number((closePrice + (closePrice * (slippage/100))).toFixed(2));
 }
 
