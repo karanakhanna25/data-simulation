@@ -36,12 +36,18 @@ export class SimulationEngineComponent implements OnInit {
 
   readonly riskFromoptions = [
     {value: 'risk from open', label: 'risk from open'},
-    {value: 'risk from 9:35 close', label: 'risk from 9:35 close'},
-    {value: 'risk from 9:45 close', label: 'risk from 9:45 close'},
+    {value: 'risk from 9:45am High', label: 'risk from 9:45am High'},
+    {value: 'risk from 10am High', label: 'risk from 10am High'},
+    {value: 'risk from 10:30 High', label: 'risk from 10:30 High'},
     {value: 'risk from 0.886 Fib level', label: 'risk from 0.886 fib level'},
     {value: 'risk from 0.786 Fib level', label: 'risk from 0.786 fib level'},
     {value: 'risk from pmh', label: 'risk from pmh'},
     {value: 'use pmh as risk', label: 'use pmh as risk'},
+    {value: 'use 9:45am high as risk', label: 'use 9:45am high as risk'},
+    {value: 'use 10am high as risk', label: 'use 10am high as risk'},
+    {value: 'use 10:30am high as risk', label: 'use 10:30am high as risk'},
+    {value: 'use 11am high as risk', label: 'use 11am high as risk'},
+    {value: 'use 11:30am high as risk', label: 'use 11:30am high as risk'},
   ]
 
   readonly exitAtTimeOptions = [
@@ -59,7 +65,8 @@ export class SimulationEngineComponent implements OnInit {
     {value: 'enter at 9:45am', label: 'enter at 9:45am'},
     {value: 'enter at 10am', label: 'enter at 10am'},
     {value: 'enter at 10:30am', label: 'enter at 10:30am'},
-    {value: 'enter at 11:00am', label: 'enter at 11:00am'}
+    {value: 'enter at 11:00am', label: 'enter at 11:00am'},
+    {value: 'enter at 11:30am', label: 'enter at 11:30am'}
   ]
 
   readonly pyramidOptions = [

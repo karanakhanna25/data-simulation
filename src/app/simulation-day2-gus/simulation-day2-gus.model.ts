@@ -87,7 +87,12 @@ export interface ISimualationDay2GUSExtended extends ISimulationDay2GUSData {
   'Day -1 VW': number,
   'Day -1 Market Cap': number,
   'Day -1 Range': number,
-  'Day -1 Dollar Volume': number
+  'Day -1 Dollar Volume': number,
+  '10am close < open' : 1 | 0
+  'spike % 9:45am': number,
+  '10am close - open dist': number,
+  'Broke 10am High': 1 | 0,
+  '9:45am close < open': 1 | 0
 }
 
 export enum ISimulationDay2GUSDataExtendedFields {
@@ -152,5 +157,10 @@ export enum ISimulationDay2GUSDataExtendedFields {
   'Day -1 VW' = 'Day -1 VW',
   'Day -1 Market Cap' = 'Day -1 Market Cap',
   'Day -1 Range' = 'Day -1 Range',
-  'Day -1 Dollar Volume' = 'Day -1 Dollar Volume'
+  'Day -1 Dollar Volume' = 'Day -1 Dollar Volume',
+  '10am close < open' = '10am close < open',
+  '10am close - open dist' = '10am close - open dist',
+  'spike % 9:45am' = 'spike % 9:45am',
+  'Broke 10am High'= 'Broke 10am High',
+  '9:45am close < open' = '9:45am close < open'
 }

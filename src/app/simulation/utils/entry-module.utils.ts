@@ -25,6 +25,8 @@ export function getEntryPrice(config: ISimulationEngineConfig, data: IDataGapper
       return data["Day 1 15Min Close"];
     case 'enter at 9:35am':
       return data["Day 1 5Min Close"];
+    case 'enter at 11:30am':
+      return data["Day 1 120Min Close"];
   }
 }
 

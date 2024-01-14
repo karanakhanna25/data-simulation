@@ -390,8 +390,24 @@ export function agGridColumnDefs(): ColDef[] {
       width: 130
     },
     {
+      headerName: IDataGapperUploadExtendedFields['spike % 9:45am'],
+      field: IDataGapperUploadExtendedFields['spike % 9:45am'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 180
+    },
+    {
       headerName: IDataGapperUploadExtendedFields['Open-High Spike%'],
       field: IDataGapperUploadExtendedFields['Open-High Spike%'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['10am close - open dist'],
+      field: IDataGapperUploadExtendedFields['10am close - open dist'],
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
       valueFormatter: numberFormatter,
@@ -426,13 +442,6 @@ export function agGridColumnDefs(): ColDef[] {
       width: 180
     },
     {
-      headerName: IDataGapperUploadExtendedFields['Broke 11am High'],
-      field: IDataGapperUploadExtendedFields['Broke 11am High'],
-      cellClass: 'center-align',
-      filter: true,
-      width: 180
-    },
-    {
       headerName: IDataGapperUploadExtendedFields['Broke 9:45am High'],
       field: IDataGapperUploadExtendedFields['Broke 9:45am High'],
       cellClass: 'center-align',
@@ -440,8 +449,36 @@ export function agGridColumnDefs(): ColDef[] {
       width: 180
     },
     {
+      headerName: IDataGapperUploadExtendedFields['Broke 10am High'],
+      field: IDataGapperUploadExtendedFields['Broke 10am High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
       headerName: IDataGapperUploadExtendedFields['Broke 10:30am High'],
       field: IDataGapperUploadExtendedFields['Broke 10:30am High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Broke 11am High'],
+      field: IDataGapperUploadExtendedFields['Broke 11am High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['9:45am close < open'],
+      field: IDataGapperUploadExtendedFields['9:45am close < open'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['10am close < open'],
+      field: IDataGapperUploadExtendedFields['10am close < open'],
       cellClass: 'center-align',
       filter: true,
       width: 180

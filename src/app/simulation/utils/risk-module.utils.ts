@@ -21,10 +21,27 @@ export function getMaxLossRiskLevel(config: ISimulationEngineConfig, data: IData
     case 'use pmh as risk':
       return data["Day 1 PM High"];
     case 'risk from 9:45 close':
-      return calculateRisk(data["Day 1 15Min Close"], config)
-    case 'risk from 9:35 close':
-      return calculateRisk(data["Day 1 5Min Close"], config)
+      return calculateRisk(data["Day 1 15Min High"], config)
+    case 'risk from 10am High':
+      return calculateRisk(data["Day 1 30Min High"], config);
+    case 'risk from 10:30am High':
+      return calculateRisk(data["Day 1 60Min High"], config);
+    case 'use 10:30am high as risk':
+      return addWiggleRoom(data["Day 1 60Min High"], config);
+    case 'use 10am high as risk':
+      return addWiggleRoom(data["Day 1 30Min High"], config);
+    case 'use 11am high as risk':
+      return addWiggleRoom(data["Day 1 90Min High"], config);
+    case 'use 11:30am high as risk':
+        return addWiggleRoom(data["Day 1 120Min High"], config);
+    case 'use 9:45am high as risk':
+      return addWiggleRoom(data["Day 1 15Min High"], config);
   }
+}
+
+function addWiggleRoom(price: number, config: ISimulationEngineConfig): number {
+  const wiggleRoom = config.wiggle_room;
+  return(price + (price * (wiggleRoom/100)));
 }
 
 export function getRiskLevelWithWiggleRoom(config: ISimulationEngineConfig, data: IDataGapperUploadExtended): number {
