@@ -20,6 +20,7 @@
     <label>10:30am close - close%: {{Close1030ToEODCloseFadePercent()}}%</label>
     <label>11:00am close - close%: {{Close11ToEODCloseFadePercent()}}%</label>
     <label>11:30am close - close%: {{Close1130ToEODCloseFadePercent()}}%</label>
+    <label>10am close - open: {{OpenTo10amFadePercent()}}%</label>
   </div>
 </div>
 <tv-lightweight-chart *ngIf="!!ticker && !!date" [ticker]="ticker" [date]="date" [data]="data"></tv-lightweight-chart>

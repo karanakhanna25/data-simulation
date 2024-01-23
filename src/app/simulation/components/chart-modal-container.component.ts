@@ -57,4 +57,8 @@ export class ChartModalContainerComponent {
   OpenToCloseFadePercent(): number {
     return Number((((this.data["Day 1 Close"] - this.data["Day 1 Open"])/this.data["Day 1 Open"] * 100).toFixed(2)));
   }
+
+  OpenTo10amFadePercent(): number {
+    return Number((((this.data["Day 1 30Min Close"] - this.data["Day 1 Open"])/this.data["Day 1 Open"] * 100).toFixed(2)));
+  }
 }

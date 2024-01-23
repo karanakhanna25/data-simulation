@@ -1,5 +1,6 @@
 import { IDataGapperUploadExtended, ISimulationEngineConfig } from "@app-simulation/simulation.model";
 import { getRiskTimeFrameCloseValue, getRiskTimeFrameHighValue } from "./common.utils";
+import { addWiggleRoom } from "./risk-module.utils";
 
 export function calculateProfitLoss(entry: number, exit: number, shares: number): number {
   return Number((shares * (entry - exit)).toFixed(2));
@@ -85,13 +86,37 @@ export function getExitPriceForLows(maxLossLevel: number, config: ISimulationEng
   return riskBreakPrice;
 }
 
+function getTimeBasedRisk(data: IDataGapperUploadExtended, config: ISimulationEngineConfig): number | undefined{
+  const riskLevel = config.enter_at;
+  switch(riskLevel) {
+    case 'use 10:30am high as risk':
+      return data["Day 1 60Min High"];
+    case 'use 10am high as risk':
+      return data["Day 1 30Min High"];
+    case 'use 11am high as risk':
+      return data["Day 1 90Min High"];
+    case 'use 11:30am high as risk':
+      return data["Day 1 120Min High"];
+    case 'use 9:45am high as risk':
+      return data["Day 1 15Min High"];
+    default:
+      return undefined;
+  }
+}
+
 function getRiskBreakLevelPrice(maxLossLevel: number, data: IDataGapperUploadExtended, config: ISimulationEngineConfig): number | undefined {
   const timeFrameHigh = getRiskTimeFrameHighValue(config.riskTimeFrame, data);
-  if (timeFrameHigh > maxLossLevel) {
+  const timeBasedRisk = getTimeBasedRisk(data, config);
+
+  if (timeBasedRisk && data["Day 1 High"] > addWiggleRoom(timeBasedRisk, config)) {
+    return timeBasedRisk;
+  }
+
+  if (timeFrameHigh > addWiggleRoom(maxLossLevel, config)) {
     return maxLossLevel;
   }
 
-  if (data["Day 1 High"] > timeFrameHigh) {
+  if (data["Day 1 High"] > addWiggleRoom(timeFrameHigh, config)) {
     return timeFrameHigh;
   }
   return undefined;

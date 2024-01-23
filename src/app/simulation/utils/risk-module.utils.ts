@@ -39,7 +39,7 @@ export function getMaxLossRiskLevel(config: ISimulationEngineConfig, data: IData
   }
 }
 
-function addWiggleRoom(price: number, config: ISimulationEngineConfig): number {
+export function addWiggleRoom(price: number, config: ISimulationEngineConfig): number {
   const wiggleRoom = config.wiggle_room;
   return(price + (price * (wiggleRoom/100)));
 }
