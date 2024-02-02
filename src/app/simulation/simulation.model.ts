@@ -79,7 +79,8 @@ export interface IDataGapperUploadExtended extends IDataGapper {
   'Inst Own': number,
   'Broke 10:30am High': 1 | 0,
   'Broke 10am High': 1 | 0,
-  'Broke 9:45am High': 1 | 0
+  'Broke 9:45am High': 1 | 0,
+  'Broke 9:35am High': 1 | 0
   '10am close < open' : 1 | 0
   'spike % 9:45am': number,
   '10am close - open dist': number,
@@ -137,6 +138,7 @@ export enum IDataGapperUploadExtendedFields {
   'Broke 10am High' = 'Broke 10am High',
   'Broke 10:30am High' = 'Broke 10:30am High',
   'Broke 11am High' = 'Broke 11am High',
+  'Broke 9:35am High' = 'Broke 9:35am High',
   'Broke 9:45am High' = 'Broke 9:45am High',
   '60Min High > 30Min High' = '60Min High > 30Min High',
   'Inst Own' = 'Inst Own',

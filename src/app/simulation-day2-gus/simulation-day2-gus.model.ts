@@ -92,7 +92,8 @@ export interface ISimualationDay2GUSExtended extends ISimulationDay2GUSData {
   'spike % 9:45am': number,
   '10am close - open dist': number,
   'Broke 10am High': 1 | 0,
-  '9:45am close < open': 1 | 0
+  '9:45am close < open': 1 | 0,
+  'Broke 9:35am High': 1 | 0,
 }
 
 export enum ISimulationDay2GUSDataExtendedFields {
@@ -162,5 +163,6 @@ export enum ISimulationDay2GUSDataExtendedFields {
   '10am close - open dist' = '10am close - open dist',
   'spike % 9:45am' = 'spike % 9:45am',
   'Broke 10am High'= 'Broke 10am High',
-  '9:45am close < open' = '9:45am close < open'
+  '9:45am close < open' = '9:45am close < open',
+  'Broke 9:35am High' = 'Broke 9:35am High',
 }
