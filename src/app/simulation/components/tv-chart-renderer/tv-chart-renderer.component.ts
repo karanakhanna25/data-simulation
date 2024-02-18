@@ -61,6 +61,11 @@ export class TVLightweightChartComponent implements OnInit {
         },
       });
 
+      const vwapSeries = candleStickChart.addLineSeries({
+        color: 'purple',
+        lineWidth: 1,
+      });
+
       candleSeries.priceScale().applyOptions({
         scaleMargins: {
           top: 0.1, // highest point of the series will be 10% away from the top
@@ -77,7 +82,8 @@ export class TVLightweightChartComponent implements OnInit {
           high: item.h, // High price
           low: item.l, // Low price
           close: item.c, // Closing price
-          volume: item.v
+          volume: item.v,
+          vw: item.vw
         }
       });
       candleSeries.createPriceLine({
@@ -154,6 +160,7 @@ export class TVLightweightChartComponent implements OnInit {
 
       candleSeries.setData(formattedData);
       volumeSeries.setData(formattedData.map(f => ({time: f.time, value: f.volume})));
+      // vwapSeries.setData(formattedData.map(f => ({time: f.time, value: f.vw})));
     });
   }
 

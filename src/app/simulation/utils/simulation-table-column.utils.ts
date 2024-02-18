@@ -115,6 +115,13 @@ export function agGridColumnDefs(): ColDef[] {
       width: 130
     },
     {
+      headerName: IDataGapperUploadExtendedFields['gap until pmh'],
+      field: IDataGapperUploadExtendedFields['gap until pmh'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 130
+    },
+    {
       headerName: IDataGapperUploadExtendedFields['Day 1 Vol'],
       field: IDataGapperUploadExtendedFields['Day 1 Vol'],
       filter: 'agNumberColumnFilter',
@@ -437,6 +444,13 @@ export function agGridColumnDefs(): ColDef[] {
     {
       headerName: IDataGapperUploadExtendedFields['60Min High > 30Min High'],
       field: IDataGapperUploadExtendedFields['60Min High > 30Min High'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Broke PMH'],
+      field: IDataGapperUploadExtendedFields['Broke PMH'],
       cellClass: 'center-align',
       filter: true,
       width: 180

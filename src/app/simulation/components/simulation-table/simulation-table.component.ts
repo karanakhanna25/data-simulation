@@ -11,6 +11,7 @@ import { ColDef, ExcelExportParams, FilterChangedEvent, GridApi, GridOptions, Gr
 import { filter, take } from 'rxjs';
 import * as XLSX from 'xlsx';
 import { ExcelFileNameInputDialogComponent } from './excel-file-input/excel-file-input-dialog.component';
+import { Router } from '@angular/router';
 
 
 @UntilDestroy()
@@ -44,7 +45,7 @@ export class SimulationTableComponent implements OnInit {
     onSortChanged: this.onSortChanged.bind(this)
   }
 
-  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog) {}
+  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog, private _router: Router) {}
 
   ngOnInit(): void {
     this._configStore.simulationEngineConfig$.pipe(
@@ -79,10 +80,11 @@ export class SimulationTableComponent implements OnInit {
           return acc;
         }, []) as IDataGapperUploadExtended[]).map(d => ({...d,
             ["Day 1 Date"]: new Date(formatDate(d['Day 1 Date'], 'MM-dd-yyyy', 'en-US')) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
+            const context = this._router.url.includes('simulation-low-gap-gus') ? 'low-gus' : 'gus';
         this._store.uploadGusData({
           data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
           // data: [],
-          context: 'gus',
+          context: context,
           type: 'append'
         });
       }
@@ -169,12 +171,13 @@ export class SimulationTableComponent implements OnInit {
 
   onSortChanged(evt: SortChangedEvent): void {
     this.gripApi = evt.api;
+    console.log(this.filteredRows());
     this._store.runPnlCalculations(this.filteredRows());
   }
 
   filteredRows(): IDataGapperUploadExtended[] {
     const rowData: IDataGapperUploadExtended[] = [];
-    this.gripApi?.forEachNode((node) => {
+    this.gripApi?.forEachNodeAfterFilterAndSort((node) => {
       if (node.displayed) {
         rowData.push(node.data);
       }

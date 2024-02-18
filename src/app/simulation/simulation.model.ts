@@ -84,7 +84,9 @@ export interface IDataGapperUploadExtended extends IDataGapper {
   '10am close < open' : 1 | 0
   'spike % 9:45am': number,
   '10am close - open dist': number,
-  '9:45am close < open': 1 | 0
+  '9:45am close < open': 1 | 0,
+  'gap until pmh': number,
+  'Broke PMH': 1 | 0
 }
 
 export enum IDataGapperUploadExtendedFields {
@@ -146,4 +148,6 @@ export enum IDataGapperUploadExtendedFields {
   '10am close < open' = '10am close < open',
   'spike % 9:45am' = 'spike % 9:45am',
   '10am close - open dist' = '10am close - open dist',
+  'gap until pmh' = 'gap until pmh',
+  'Broke PMH' = 'Broke PMH'
 }

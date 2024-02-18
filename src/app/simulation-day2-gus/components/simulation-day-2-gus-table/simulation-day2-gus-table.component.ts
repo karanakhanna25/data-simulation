@@ -12,6 +12,7 @@ import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { filter, map, take } from "rxjs";
 import { ISimualationDay2GUSExtended, ISimulationDay2GUSDataExtendedFields } from "@app-simulation-day2-gus/simulation-day2-gus.model";
 import * as XLSX from 'xlsx';
+import { Router } from "@angular/router";
 
 @UntilDestroy()
 @Component({
@@ -53,7 +54,7 @@ export class SimulationDay2GusTableComponent {
     onSortChanged: this.onSortChanged.bind(this)
   }
 
-  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog) {}
+  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog, private _router: Router) {}
 
   ngOnInit(): void {
     this._configStore.simulationEngineConfig$.pipe(
@@ -88,12 +89,15 @@ export class SimulationDay2GusTableComponent {
           return acc;
         }, []) as ISimualationDay2GUSExtended[]).map(d => ({...d,
             ["Day 1 Date"]: new Date(formatDate(d['Day 1 Date'], 'MM-dd-yyyy', 'en-US')) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as ISimualationDay2GUSExtended[];
-        this._store.uploadGusData({
-          data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
-          // data: [],
-          context: 'day2-gus',
-          type: 'append'
-        });
+        const context = this._getContext();
+        if (context) {
+          this._store.uploadGusData({
+            data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
+            // data: [],
+            context,
+            type: 'append'
+          });
+        }
       }
     }
     reader.readAsBinaryString(target.files[0]);
@@ -108,6 +112,20 @@ export class SimulationDay2GusTableComponent {
     ).subscribe(data => {
       this._exportFromGrid(data);
     })
+  }
+
+  private _getContext(): string | undefined {
+    const url = this._router.url;
+    if (url.includes('simulation-gapdown')) {
+      return 'gapdown'
+    }
+    if (url.includes('simulation-day-2-gus')) {
+      return 'day2-gus';
+    }
+    if (url.includes('simulation-multiday-gapdown')) {
+      return 'multiday-gapdown'
+    }
+    return undefined;
   }
 
   private _exportFromGrid(fileName: string): void {

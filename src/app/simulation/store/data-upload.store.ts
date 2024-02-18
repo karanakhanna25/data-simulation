@@ -112,25 +112,31 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   }
 
   private _addCalculatedFields(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {
-    return data.map(g => ({
-      ...g,
-      "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
-      "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green',
-      'Open-High Spike%': Number(((g["Day 1 High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
-      'Open wrt to Fib': getOpenRelativeToFibLevel(g),
-      '60Min Close < Open': g["Day 1 60Min Close"] < g["Day 1 Open"] ? 1 : 0,
-      '30Min Close < Open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
-      'Broke 11am High': g["Day 1 High"] > g["Day 1 90Min High"] ? 1 : 0,
-      '60Min High > 30Min High': g["Day 1 60Min High"] > g["Day 1 30Min High"] ? 1 : 0,
-      'Broke 10:30am High': g["Day 1 High"] > g["Day 1 60Min High"] ? 1 : 0,
-      "Broke 9:35am High": g["Day 1 High"] > g["Day 1 5Min High"] ? 1 : 0,
-      "Broke 9:45am High" : g["Day 1 High"] > g["Day 1 15Min High"] ? 1 : 0,
-      '10am close < open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
-      '10am close - open dist': Number(((g["Day 1 30Min Close"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
-      'spike % 9:45am': Number(((g["Day 1 15Min High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
-      'Broke 10am High': g["Day 1 High"] > g["Day 1 30Min High"] ? 1 : 0,
-      '9:45am close < open': g["Day 1 15Min Close"] < g["Day 1 Open"] ? 1 : 0
-    }))
+    if (data) {
+      return (data || []).map(g => ({
+        ...g,
+        "pmh-open%": this._calculateDistanceOpenPmh(g["Day 1 Open"], g["Day 1 PM High"]),
+        "Closed Status": g["Day 1 Open"] > g["Day 1 Close"] ? 'Closed Red' : 'Closed Green',
+        'Open-High Spike%': Number(((g["Day 1 High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
+        'Open wrt to Fib': getOpenRelativeToFibLevel(g),
+        '60Min Close < Open': g["Day 1 60Min Close"] < g["Day 1 Open"] ? 1 : 0,
+        '30Min Close < Open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
+        'Broke 11am High': g["Day 1 High"] > g["Day 1 90Min High"] ? 1 : 0,
+        '60Min High > 30Min High': g["Day 1 60Min High"] > g["Day 1 30Min High"] ? 1 : 0,
+        'Broke 10:30am High': g["Day 1 High"] > g["Day 1 60Min High"] ? 1 : 0,
+        "Broke 9:35am High": g["Day 1 High"] > g["Day 1 5Min High"] ? 1 : 0,
+        "Broke 9:45am High" : g["Day 1 High"] > g["Day 1 15Min High"] ? 1 : 0,
+        '10am close < open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
+        '10am close - open dist': Number(((g["Day 1 30Min Close"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
+        'spike % 9:45am': Number(((g["Day 1 15Min High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
+        'Broke 10am High': g["Day 1 High"] > g["Day 1 30Min High"] ? 1 : 0,
+        '9:45am close < open': g["Day 1 15Min Close"] < g["Day 1 Open"] ? 1 : 0,
+        'gap until pmh': Number((((g["Day 1 PM High"] - g["Day -1 Close"])/g["Day -1 Close"])*100).toFixed(2)),
+        'Broke PMH': g["Day 1 High"] > g["Day 1 PM High"] ? 1 : 0
+      }))
+    }
+    return [];
+
   }
 
   private _filterBrokenTickers(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {

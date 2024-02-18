@@ -13,6 +13,7 @@ export class FirebaseService {
   constructor(private _http: HttpClient) { }
 
   addStrategyRecords(records: {[key: string]: any}): Observable<IDataGapperUploadExtended[]> {
+    console.log(records);
     return this._http.put<IDataGapperUploadExtended[]>(this.url, records, {headers: this._headers});
   }
 

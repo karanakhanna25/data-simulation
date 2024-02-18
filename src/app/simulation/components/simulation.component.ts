@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { SimulationDataStore } from '@app-simulation/store/data-upload.store';
 import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-config.store';
 
@@ -11,10 +12,11 @@ import { SimulationEngineConfigStore } from '@app-simulation/store/simulation-co
 export class SimulationComponent {
 
 
-  constructor(private _store: SimulationDataStore) {}
+  constructor(private _store: SimulationDataStore, private _router: Router) {}
 
   ngOnInit(): void {
-    this._store.loadGUSData('gus')
+    const context = this._router.url.includes('simulation-low-gap-gus') ? 'low-gus' : 'gus';
+    this._store.loadGUSData(context)
    }
 
 }
