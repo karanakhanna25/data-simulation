@@ -1,6 +1,7 @@
 import { ColDef } from "ag-grid-community";
 import { agGridColumnDefs } from "./utils/simulation-table-column.utils";
 import { formatDate } from "@angular/common";
+import { day2GUSAgGridColumnDefs } from "@app-simulation-day2-gus/components/simulation-day-2-gus-table/simulation-day-2-table.columns.utils";
 
 const filterTypeToSymbolMap: {[key: string]: string} = {
   equals: '=',
@@ -62,5 +63,5 @@ export function getFilterExpression(filters: any): {key: string, expression: str
 }
 
 function getColForField(val: string): ColDef | undefined{
-  return agGridColumnDefs().find(col => col.field === val);
+  return day2GUSAgGridColumnDefs().find(col => col.field === val);
 }

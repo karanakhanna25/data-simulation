@@ -96,6 +96,15 @@ export class TVLightweightChartComponent implements OnInit {
       });
 
       candleSeries.createPriceLine({
+        price: this.data['Day -1 Close'],
+        color: 'blue',
+        lineWidth: 2,
+        lineStyle: LineStyle.Solid,
+        axisLabelVisible: true,
+        title: 'Prev day Close'
+      });
+
+      candleSeries.createPriceLine({
         price: this.data['Day 1 Open'],
         color: 'green',
         lineWidth: 2,

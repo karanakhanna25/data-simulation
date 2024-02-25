@@ -33,7 +33,10 @@ export class SimulationDay2GusTableComponent {
     map(data => data.map(d => ({
       ...d,
     'Day -1 Dollar Volume': d["Day -1 VW"] * d["Day -1 Vol"],
-    "Day -1 Range": Number(((d["Day -1 Close"] - d["Day -1 Open"])/d["Day -1 Open"] *100).toFixed(2))
+    "Day -1 Range": Number(((d["Day -1 Close"] - d["Day -1 Open"])/d["Day -1 Open"] *100).toFixed(2)),
+    'Projected volume': Number(d["Day 1 PM Vol"]) * 10,
+    "Projected Volume < Day -1 Vol": (Number(d["Day 1 PM Vol"]) * 10) < d["Day -1 Vol"] ? 1 : 0,
+    'Volume Ratio': Number((d["Day -1 Vol"]/(Number(d["Day 1 PM Vol"]) * 10)).toFixed(2))
     })))
   )
 
@@ -95,7 +98,7 @@ export class SimulationDay2GusTableComponent {
             data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
             // data: [],
             context,
-            type: 'append'
+            type: 'replace'
           });
         }
       }

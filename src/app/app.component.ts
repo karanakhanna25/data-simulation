@@ -14,6 +14,7 @@ export class AppComponent  {
     { path: '/simulation-low-gap-gus', label: 'Simulation - GUS (20%+ - 75%)' },
     { path: '/simulation-multiday-gapdown', label: 'Simulation multiday gapdown' },
     { path: '/simulation-gapdown', label: 'Simulation gapdown' },
+    { path: '/simulation-combined-gus', label: 'Simulation GUS Combined' },
   ];
 
   constructor() {}

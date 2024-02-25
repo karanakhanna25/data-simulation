@@ -16,12 +16,11 @@ export class SimulationDay2GUSComponent  {
   ngOnInit(): void {
     const context = this._getContext();
     if (context) {
-      console.log(context);
       this._store.loadGUSData(context);
     }
   }
 
-   private _getContext(): string | undefined {
+  private _getContext(): string | undefined {
     const url = this._router.url;
     if (url.includes('simulation-gapdown')) {
       return 'gapdown'

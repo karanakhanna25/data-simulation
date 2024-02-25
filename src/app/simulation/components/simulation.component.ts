@@ -15,8 +15,27 @@ export class SimulationComponent {
   constructor(private _store: SimulationDataStore, private _router: Router) {}
 
   ngOnInit(): void {
-    const context = this._router.url.includes('simulation-low-gap-gus') ? 'low-gus' : 'gus';
-    this._store.loadGUSData(context)
+    const context = this._getContext();
+    if (context) {
+      this._store.loadGUSData(context);
+    }
+
    }
+
+   private _getContext(): string | undefined {
+    const url = this._router.url;
+    if (url.includes('simulation-low-gap-gus')) {
+      return 'low-gus'
+    }
+
+    if (url.includes('simulation-gus')) {
+      return 'gus';
+    }
+
+    if (url.includes('simulation-combined-gus')) {
+      return 'gus-combined'
+    }
+    return undefined;
+  }
 
 }

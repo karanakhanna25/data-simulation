@@ -428,6 +428,7 @@ export function day2GUSAgGridColumnDefs(): ColDef[] {
       headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Vol'],
       field: ISimulationDay2GUSDataExtendedFields['Day -1 Vol'],
       filter: 'agNumberColumnFilter',
+      valueFormatter: numberFormatter,
       cellClass: 'center-align',
       width: 130
     },
@@ -455,6 +456,51 @@ export function day2GUSAgGridColumnDefs(): ColDef[] {
       width: 130
     },
     {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Range'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Range'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Dollar Volume'],
+      field: ISimulationDay2GUSDataExtendedFields['Day -1 Dollar Volume'],
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Projected volume'],
+      field: ISimulationDay2GUSDataExtendedFields['Projected volume'],
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      filter: true,
+      width: 180
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Projected Volume < Day -1 Vol'],
+      field: ISimulationDay2GUSDataExtendedFields['Projected Volume < Day -1 Vol'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 220
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['Volume Ratio'],
+      field: ISimulationDay2GUSDataExtendedFields['Volume Ratio'],
+      cellClass: 'center-align',
+      filter: true,
+      width: 220
+    },
+    {
+      headerName: ISimulationDay2GUSDataExtendedFields['spike % 9:45am'],
+      field: ISimulationDay2GUSDataExtendedFields['spike % 9:45am'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 180
+    },
+    {
       headerName: ISimulationDay2GUSDataExtendedFields['Open-High Spike%'],
       field: ISimulationDay2GUSDataExtendedFields['Open-High Spike%'],
       filter: 'agNumberColumnFilter',
@@ -469,20 +515,7 @@ export function day2GUSAgGridColumnDefs(): ColDef[] {
       filter: true,
       width: 180
     },
-    {
-      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Range'],
-      field: ISimulationDay2GUSDataExtendedFields['Day -1 Range'],
-      cellClass: 'center-align',
-      filter: true,
-      width: 180
-    },
-    {
-      headerName: ISimulationDay2GUSDataExtendedFields['Day -1 Dollar Volume'],
-      field: ISimulationDay2GUSDataExtendedFields['Day -1 Dollar Volume'],
-      cellClass: 'center-align',
-      filter: true,
-      width: 180
-    },
+
     {
       headerName: ISimulationDay2GUSDataExtendedFields['30Min Close < Open'],
       field: ISimulationDay2GUSDataExtendedFields['30Min Close < Open'],

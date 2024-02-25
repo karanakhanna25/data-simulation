@@ -36,6 +36,8 @@ export function getMaxLossRiskLevel(config: ISimulationEngineConfig, data: IData
         return addWiggleRoom(data["Day 1 120Min High"], config);
     case 'use 9:45am high as risk':
       return addWiggleRoom(data["Day 1 15Min High"], config);
+    case 'use prev day close as risk':
+      return addWiggleRoom(data["Day -1 Close"], config);
   }
 }
 

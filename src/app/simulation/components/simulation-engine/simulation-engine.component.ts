@@ -48,6 +48,7 @@ export class SimulationEngineComponent implements OnInit {
     {value: 'use 10:30am high as risk', label: 'use 10:30am high as risk'},
     {value: 'use 11am high as risk', label: 'use 11am high as risk'},
     {value: 'use 11:30am high as risk', label: 'use 11:30am high as risk'},
+    {value: 'use prev day close as risk', label: 'use prev day close as risk'},
   ]
 
   readonly exitAtTimeOptions = [

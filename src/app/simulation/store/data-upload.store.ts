@@ -78,7 +78,13 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     trigger$.pipe(
       switchMap((context) => this._firebaseService.retrieveRecords().pipe(
         tap(data => {
-          this.updateGUSRecords(data[context]);
+          if (context === 'gus-combined') {
+              const combinedData = [...data['low-gus'], ...data['gus']];
+              this.updateGUSRecords(combinedData);
+          } else {
+            this.updateGUSRecords(data[context]);
+          }
+
         })
       )),
     )

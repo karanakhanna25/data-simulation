@@ -95,7 +95,10 @@ export interface ISimualationDay2GUSExtended extends ISimulationDay2GUSData {
   '9:45am close < open': 1 | 0,
   'Broke 9:35am High': 1 | 0,
   'gap until pmh': number,
-  'Broke PMH': 1 | 0
+  'Broke PMH': 1 | 0,
+  'Projected volume': number,
+  'Projected Volume < Day -1 Vol': 1 | 0,
+  'Volume Ratio': number
 }
 
 export enum ISimulationDay2GUSDataExtendedFields {
@@ -168,5 +171,8 @@ export enum ISimulationDay2GUSDataExtendedFields {
   '9:45am close < open' = '9:45am close < open',
   'Broke 9:35am High' = 'Broke 9:35am High',
   'gap until pmh' = 'gap until pmh',
-  'Broke PMH' = 'Broke PMH'
+  'Broke PMH' = 'Broke PMH',
+  'Projected volume' = 'Projected volume',
+  'Projected Volume < Day -1 Vol' = 'Projected Volume < Day -1 Vol',
+  'Volume Ratio' = 'Volume Ratio'
 }
