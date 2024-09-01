@@ -1,0 +1,8 @@
+
+<scatter-plot-chart [data]="(data$ | async) || []"></scatter-plot-chart>
+<div class="select-label timeframe" [formGroup]="form">
+  <select formControlName="timeFrame" >
+    <option *ngFor="let option of timeFrameOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+  </select>
+  <label>TimeFrame</label>
+</div>

@@ -1,0 +1,27 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.select-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-size: 12px;
+    color: grey;
+  }
+}
+
+select {
+  height: 28px;
+  width: 140px;
+  border-radius: 4px;
+  border: 1px solid grey;
+}
+
+.timeframe {
+  align-self: center;
+}

@@ -2,13 +2,18 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as d3 from 'd3';
 
+export interface IScatterPlotData {
+  x: number;
+  y: number;
+}
+
 @Component({
-  selector: 'line-chart',
-  template: '<div class="chart-container" id="chartContainer"><svg id="lineChart"></svg></div>',
-  styleUrls: ['line-chart.component.scss'],
+  selector: 'scatter-plot-chart',
+  template: '<div class="chart-container" id="chartContainer"><svg id="scatterplotChart"></svg></div>',
+  styleUrls: ['scatter-plot-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LineChartComponent implements AfterViewInit {
+export class ScatterPlotComponent implements AfterViewInit {
 
   @Input()
   width!: 500;
@@ -16,30 +21,32 @@ export class LineChartComponent implements AfterViewInit {
   @Input()
   height!: 500;
 
-  lineData: number[] = [];
+  scatterplotData: IScatterPlotData[] = [];
 
   @Input()
-  set data(data: number[]) {
-    this.lineData = data as number[];
-    this.drawChart(data as number[]);
+  set data(data: IScatterPlotData[]) {
+    this.scatterplotData = data as IScatterPlotData[];
+    this.drawChart(data as IScatterPlotData[]);
   }
 
   @Output()
   onInit: EventEmitter<void> = new EventEmitter<void>()
 
   ngAfterViewInit(): void {
-    this.onInit.emit();
-    setTimeout(() => {this.drawChart(this.lineData)}, 200)
+    setTimeout(() => {
+      this.drawChart(this.scatterplotData);
+    }, 200)
+
   }
 
-  drawChart(data: number[]) {
-    d3.select("#lineChart").selectAll("*").remove();
+  drawChart(data: IScatterPlotData[]) {
+    d3.select("#scatterplotChart").selectAll("*").remove();
     let container = document.getElementById('chartContainer');
     let containerWidth = (container as HTMLElement).clientWidth;
     let containerHeight = (container as HTMLElement).clientHeight;
     if (data.length) {
 
-      d3.select("#lineChart")
+      d3.select("#scatterplotChart")
       .attr("width", containerWidth)
       .attr("height", containerHeight);
 
@@ -57,7 +64,7 @@ export class LineChartComponent implements AfterViewInit {
 
       // X scale and Axis
       var x = d3.scaleLinear()
-        .domain([0, data.length - 1])
+        .domain([d3.min(data.map(d => d.x) as any[]), d3.max(data.map(d => d.x) as any[])])
         .range([0, width]);
       svg.append("g")
         .attr("transform", "translate(0," + height + ")")
@@ -65,25 +72,27 @@ export class LineChartComponent implements AfterViewInit {
 
       // Y scale and Axis
       var y = d3.scaleLinear()
-        .domain([d3.min(data as any[]), d3.max(data as any[])])
+        .domain([d3.min(data.map(d => d.y) as any[]), d3.max(data.map(d => d.y) as any[])])
         .range([height, 0]);
+
+    svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisLeft(y)
+          .tickSize(-width)  // Make the gridlines span the entire width of the chart
+          .tickFormat('' as any));  // Remove the labels, just keep the lines
+
       svg.append("g")
         .call(d3.axisLeft(y));
 
-    const lineGenerator = d3.line()
-        .x((d, i) => x(i))
-        .y(d => y(d[1]));
-
-    const linePathString = lineGenerator(data.map((d, i) => [i, d]));
-
-      // Add the line
-      svg.append("path")
-      .datum(this.data)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", linePathString
-      );
+        svg.append('g')
+        .selectAll("dot")
+        .data(data)
+        .enter()
+        .append("circle")
+          .attr("cx", function (d) { return x(d.x); } )
+          .attr("cy", function (d) { return y(d.y); } )
+          .attr("r", 2.5)
+          .style("fill", "#69b3a2")
     }
 
   }

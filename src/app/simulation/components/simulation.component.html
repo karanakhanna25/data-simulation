@@ -1,4 +1,27 @@
 <drawer-container>
-  <simulation-engine left-section></simulation-engine>
+  <div left-section>
+    <!-- <mat-tab-group>
+      <mat-tab label="Simulation Engine">
+        <simulation-engine></simulation-engine>
+      </mat-tab>
+      <mat-tab label="Analytics">
+        <scatter-plot-chart [data]="scatterData"></scatter-plot-chart>
+      </mat-tab>
+    </mat-tab-group> -->
+    <nav mat-tab-nav-bar>
+      @for (link of navLinks; track link) {
+        <a mat-tab-link
+          [routerLink]="[link]"
+          routerLinkActive
+          (click)="activeLink = link"
+          [active]="activeLink == link"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [relativeTo]="route">
+          {{link}}
+        </a>
+      }
+    </nav>
+    <router-outlet></router-outlet>
+  </div>
   <quant-sim-simulation-table right-section></quant-sim-simulation-table>
 </drawer-container>

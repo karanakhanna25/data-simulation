@@ -18,6 +18,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   readonly config = this._configStore.simulationEngineConfig;
 
   readonly visibleRows = this.selectSignal(state => state.visibleRows);
+  readonly visibleRows$ = this.select(state => state.visibleRows);
   readonly closedRedCount = this.selectSignal(state => state.visibleRows.filter(r => r['Day 1 Open'] > r['Day 1 Close']));
   readonly closedRedPercent = computed(() => Number(((this.closedRedCount().length)/((this.visibleRows() || []).length) * 100).toFixed(2)))
 

@@ -46,7 +46,6 @@ export class SimulationTableComponent implements OnInit {
   }
 
   constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog, private _router: Router) {
-    this.rowData$.subscribe(data => console.log(data))
   }
 
   ngOnInit(): void {

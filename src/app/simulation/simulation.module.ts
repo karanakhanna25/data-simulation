@@ -16,6 +16,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartModule } from '../charts/chart.module';
 import {MatChipsModule} from '@angular/material/chips';
 import { DrawerContainerComponent } from '@app-common/drawer-container/drawer-container.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ScatterPlotComponent } from './components/analytics-chart/scatter-plot/scatter-plot-chart.component';
+import { AnalyticsComponent } from './components/analytics-chart/analytics-component';
 
 
 @NgModule({
@@ -24,7 +27,8 @@ import { DrawerContainerComponent } from '@app-common/drawer-container/drawer-co
     SimulationTableComponent,
     ChartModalContainerComponent,
     TVLightweightChartComponent,
-
+    ScatterPlotComponent,
+    AnalyticsComponent
   ],
   imports: [
     CommonModule,
@@ -39,7 +43,8 @@ import { DrawerContainerComponent } from '@app-common/drawer-container/drawer-co
     MatChipsModule,
     MatDialogModule,
     DrawerContainerComponent,
-    SimulationEngineComponent
+    SimulationEngineComponent,
+    MatTabsModule,
   ],
   exports: [],
   providers: [FirebaseService, PolygonService],
