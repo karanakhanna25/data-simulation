@@ -6,7 +6,7 @@ import { getPyramidEntryPrice, getPyramidEntryPriceRisk } from "./entry-module.u
 
 export function premarketLocateShareCount(equity: number, data: IDataGapperUploadExtended, config: ISimulationEngineConfig): number {
   const fibLevel = extractFibLevel(0.786, data);
-  const riskLevel = calculateRisk(fibLevel, config);
+  const riskLevel = calculateRisk(fibLevel, config, data);
   const locateOffset = config.locate_offset;
   const locateShareCount = getShareCount(fibLevel, riskLevel, equity, config);
   return locateShareCount * locateOffset;

@@ -25,7 +25,10 @@ function pinnedRowValueFormatter(params: ValueFormatterParams): string {
 
 function numberFormatter(params: ValueFormatterParams): string {
   if (params.value) {
-    return Number((params.value as number).toFixed(2)).toLocaleString()
+    if (Number.isNaN(Number((params.value)))) {
+      return Number(Number((params.value.split(',').join('') as number)).toFixed(2)).toLocaleString();
+    }
+    return Number((params.value as number)).toFixed(2).toLocaleString();
   }
   return ''
 
@@ -113,6 +116,14 @@ export function agGridColumnDefs(): ColDef[] {
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
       width: 130
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['Float Rotation'],
+      field: IDataGapperUploadExtendedFields['Float Rotation'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      width: 140,
+      valueFormatter: numberFormatter
     },
     {
       headerName: IDataGapperUploadExtendedFields['gap until pmh'],
@@ -399,6 +410,22 @@ export function agGridColumnDefs(): ColDef[] {
     {
       headerName: IDataGapperUploadExtendedFields['spike % 9:45am'],
       field: IDataGapperUploadExtendedFields['spike % 9:45am'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['spike % 10:00am'],
+      field: IDataGapperUploadExtendedFields['spike % 10:00am'],
+      filter: 'agNumberColumnFilter',
+      cellClass: 'center-align',
+      valueFormatter: numberFormatter,
+      width: 180
+    },
+    {
+      headerName: IDataGapperUploadExtendedFields['spike % 10:30am'],
+      field: IDataGapperUploadExtendedFields['spike % 10:30am'],
       filter: 'agNumberColumnFilter',
       cellClass: 'center-align',
       valueFormatter: numberFormatter,

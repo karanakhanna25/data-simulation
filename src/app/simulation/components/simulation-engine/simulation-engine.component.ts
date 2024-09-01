@@ -35,6 +35,8 @@ export class SimulationEngineComponent implements OnInit {
   ]
 
   readonly riskFromoptions = [
+    {value: 'risk gap %', label: 'risk gap %'},
+    {value: 'risk 50% of gap %', label: 'risk 50% of gap %'},
     {value: 'risk from open', label: 'risk from open'},
     {value: 'risk from 9:45am High', label: 'risk from 9:45am High'},
     {value: 'risk from 10am High', label: 'risk from 10am High'},

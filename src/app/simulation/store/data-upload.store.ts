@@ -47,6 +47,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
       }))).pipe(
         switchMap(({data, allRecords, context, type}) => {
           const contextData = ((allRecords || {})[context as keyof typeof allRecords] || []) as IDataGapperUploadExtended[];
+          console.log(contextData)
           const mergedContextData = contextData.length ? this._mergeRecords(contextData, data, type) : data;
           const newRecord = {
             [context]: mergedContextData
@@ -78,11 +79,16 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
     trigger$.pipe(
       switchMap((context) => this._firebaseService.retrieveRecords().pipe(
         tap(data => {
+          console.log(data);
           if (context === 'gus-combined') {
-              const combinedData = [...data['low-gus'], ...data['gus']];
+              const combinedData = data['day1-gus'];
               this.updateGUSRecords(combinedData);
-          } else {
-            this.updateGUSRecords(data[context]);
+          } else if (context === 'low-gus'){
+             const values = data['day1-gus'].filter((d: IDataGapperUploadExtended) => d['Day 1 Gap %'] < 75);
+            this.updateGUSRecords(values);
+          } else if (context === 'gus') {
+            const values = data['day1-gus'].filter((d: IDataGapperUploadExtended) => d['Day 1 Gap %'] >= 75);
+            this.updateGUSRecords(values);
           }
 
         })
@@ -103,6 +109,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
 
   private _mergeRecords(allRecords: IDataGapperUploadExtended[], newRecords: IDataGapperUploadExtended[], type:'append' | 'update' | 'replace'): IDataGapperUploadExtended[] {
     if (type === 'append') {
+      console.log([...allRecords, ...newRecords])
       return [...allRecords, ...newRecords];
     } else if(type === 'update') {
       return (allRecords || []).map(d => {
@@ -134,15 +141,23 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
         "Broke 9:45am High" : g["Day 1 High"] > g["Day 1 15Min High"] ? 1 : 0,
         '10am close < open': g["Day 1 30Min Close"] < g["Day 1 Open"] ? 1 : 0,
         '10am close - open dist': Number(((g["Day 1 30Min Close"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
+        'spike % 10:00am': Number(((g["Day 1 30Min High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
+        'spike % 10:30am': Number(((g["Day 1 60Min High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
         'spike % 9:45am': Number(((g["Day 1 15Min High"] - g["Day 1 Open"])/g["Day 1 Open"]*100).toFixed(2)),
         'Broke 10am High': g["Day 1 High"] > g["Day 1 30Min High"] ? 1 : 0,
         '9:45am close < open': g["Day 1 15Min Close"] < g["Day 1 Open"] ? 1 : 0,
         'gap until pmh': Number((((g["Day 1 PM High"] - g["Day -1 Close"])/g["Day -1 Close"])*100).toFixed(2)),
-        'Broke PMH': g["Day 1 High"] > g["Day 1 PM High"] ? 1 : 0
+        'Broke PMH': g["Day 1 High"] > g["Day 1 PM High"] ? 1 : 0,
+        'Float Rotation': this._calculateFloatRotation(g['Day 1 PM Vol'], Number(g['Float'])),
+        'Float': g['Float'] || 0
       }))
     }
     return [];
 
+  }
+
+  private _calculateFloatRotation(pmVol: number, float: number): number {
+   return Number((pmVol / float).toFixed(2));
   }
 
   private _filterBrokenTickers(data: IDataGapperUploadExtended[]): IDataGapperUploadExtended[] {

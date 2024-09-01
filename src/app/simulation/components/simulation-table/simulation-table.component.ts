@@ -45,7 +45,9 @@ export class SimulationTableComponent implements OnInit {
     onSortChanged: this.onSortChanged.bind(this)
   }
 
-  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog, private _router: Router) {}
+  constructor(private _store: SimulationDataStore, private _configStore: SimulationEngineConfigStore, private _dialog: MatDialog, private _router: Router) {
+    this.rowData$.subscribe(data => console.log(data))
+  }
 
   ngOnInit(): void {
     this._configStore.simulationEngineConfig$.pipe(
@@ -80,12 +82,12 @@ export class SimulationTableComponent implements OnInit {
           return acc;
         }, []) as IDataGapperUploadExtended[]).map(d => ({...d,
             ["Day 1 Date"]: new Date(formatDate(d['Day 1 Date'], 'MM-dd-yyyy', 'en-US')) ,id: `${d['Day 1 Date']}-${d.Ticker}`})) as IDataGapperUploadExtended[];
-            const context = this._router.url.includes('simulation-low-gap-gus') ? 'low-gus' : 'gus';
+            const context = 'day1-gus';
         this._store.uploadGusData({
-          data: data.filter(d => d.id !== 'undefined-undefined').filter(d => !d['Market Cap']?.length ),
+          data: data.filter(d => d.id !== 'undefined-undefined'),
           // data: [],
           context: context,
-          type: 'append'
+          type: 'replace'
         });
       }
     }

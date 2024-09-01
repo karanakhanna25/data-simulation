@@ -90,6 +90,8 @@ export interface ISimualationDay2GUSExtended extends ISimulationDay2GUSData {
   'Day -1 Dollar Volume': number,
   '10am close < open' : 1 | 0
   'spike % 9:45am': number,
+  'spike % 10:00am': number,
+  'spike % 10:30am': number,
   '10am close - open dist': number,
   'Broke 10am High': 1 | 0,
   '9:45am close < open': 1 | 0,
@@ -98,7 +100,16 @@ export interface ISimualationDay2GUSExtended extends ISimulationDay2GUSData {
   'Broke PMH': 1 | 0,
   'Projected volume': number,
   'Projected Volume < Day -1 Vol': 1 | 0,
-  'Volume Ratio': number
+  'Volume Ratio': number,
+  'Day -2 Open' : number,
+  'Day -2 Close': number,
+  'Day -2 High': number,
+  'Day -2 Low': number,
+  'Day -2 Vol': number,
+  'Day -2 Gap %': number,
+  'Day -2 VW': number,
+  'Day -2 Dollar Volume': number,
+  'Day -2 Date': Date
 }
 
 export enum ISimulationDay2GUSDataExtendedFields {
@@ -161,12 +172,22 @@ export enum ISimulationDay2GUSDataExtendedFields {
   'Day -1 Vol' = 'Day -1 Vol',
   'Day -1 Gap %' = 'Day -1 Gap %',
   'Day -1 VW' = 'Day -1 VW',
+  'Day -2 Open' = 'Day -2 Open',
+  'Day -2 Close' = 'Day -2 Close',
+  'Day -2 High' = 'Day -2 High',
+  'Day -2 Low' = 'Day -2 Low',
+  'Day -2 Vol' = 'Day -2 Vol',
+  'Day -2 Gap %' = 'Day -2 Gap %',
+  'Day -2 VW' = 'Day -2 VW',
   'Day -1 Market Cap' = 'Day -1 Market Cap',
   'Day -1 Range' = 'Day -1 Range',
   'Day -1 Dollar Volume' = 'Day -1 Dollar Volume',
+  'Day -2 Dollar Volume' = 'Day -2 Dollar Volume',
   '10am close < open' = '10am close < open',
   '10am close - open dist' = '10am close - open dist',
   'spike % 9:45am' = 'spike % 9:45am',
+  'spike % 10:00am' = 'spike % 10:00am',
+  'spike % 10:30am' = 'spike % 10:30am',
   'Broke 10am High'= 'Broke 10am High',
   '9:45am close < open' = '9:45am close < open',
   'Broke 9:35am High' = 'Broke 9:35am High',
@@ -174,5 +195,6 @@ export enum ISimulationDay2GUSDataExtendedFields {
   'Broke PMH' = 'Broke PMH',
   'Projected volume' = 'Projected volume',
   'Projected Volume < Day -1 Vol' = 'Projected Volume < Day -1 Vol',
-  'Volume Ratio' = 'Volume Ratio'
+  'Volume Ratio' = 'Volume Ratio',
+  'Day -2 Date' = 'Day -2 Date'
 }

@@ -60,8 +60,8 @@ export interface IDataGapper {
   'Day -1 Close': number;
   'Industry': string;
   'Sector': string;
-  'Market Cap': string;
-  'Float': string,
+  'Market Cap': number | string;
+  'Float': number | string | null,
 }
 
 export interface IDataGapperUploadExtended extends IDataGapper {
@@ -83,6 +83,8 @@ export interface IDataGapperUploadExtended extends IDataGapper {
   'Broke 9:35am High': 1 | 0
   '10am close < open' : 1 | 0
   'spike % 9:45am': number,
+  'spike % 10:00am': number,
+  'spike % 10:30am': number,
   '10am close - open dist': number,
   '9:45am close < open': 1 | 0,
   'gap until pmh': number,
@@ -147,7 +149,10 @@ export enum IDataGapperUploadExtendedFields {
   '9:45am close < open' = '9:45am close < open',
   '10am close < open' = '10am close < open',
   'spike % 9:45am' = 'spike % 9:45am',
+  'spike % 10:00am' = 'spike % 10:00am',
+  'spike % 10:30am' = 'spike % 10:30am',
   '10am close - open dist' = '10am close - open dist',
   'gap until pmh' = 'gap until pmh',
-  'Broke PMH' = 'Broke PMH'
+  'Broke PMH' = 'Broke PMH',
+  'Float Rotation' = 'Float Rotation',
 }

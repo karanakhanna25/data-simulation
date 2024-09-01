@@ -29,10 +29,11 @@ export class SimulationDay2GusTableComponent {
   columnApi!: any;
 
   readonly day2GusData$ = this._store.gusData$.pipe(
-    map(d => d as ISimualationDay2GUSExtended[]),
+    map(d => d as unknown as ISimualationDay2GUSExtended[]),
     map(data => data.map(d => ({
       ...d,
     'Day -1 Dollar Volume': d["Day -1 VW"] * d["Day -1 Vol"],
+    'Day -2 Dollar Volume': d["Day -2 VW"] * d["Day -2 Vol"],
     "Day -1 Range": Number(((d["Day -1 Close"] - d["Day -1 Open"])/d["Day -1 Open"] *100).toFixed(2)),
     'Projected volume': Number(d["Day 1 PM Vol"]) * 10,
     "Projected Volume < Day -1 Vol": (Number(d["Day 1 PM Vol"]) * 10) < d["Day -1 Vol"] ? 1 : 0,
