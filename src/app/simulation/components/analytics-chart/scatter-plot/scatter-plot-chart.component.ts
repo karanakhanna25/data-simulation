@@ -5,11 +5,12 @@ import * as d3 from 'd3';
 export interface IScatterPlotData {
   x: number;
   y: number;
+  tooltip: string;
 }
 
 @Component({
   selector: 'scatter-plot-chart',
-  template: '<div class="chart-container" id="chartContainer"><svg id="scatterplotChart"></svg></div>',
+  templateUrl: 'scatter-plot-chart.component.html',
   styleUrls: ['scatter-plot-chart.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -83,7 +84,7 @@ export class ScatterPlotComponent implements AfterViewInit {
 
       svg.append("g")
         .call(d3.axisLeft(y));
-
+        const tooltip = d3.select("#tooltip");
         svg.append('g')
         .selectAll("dot")
         .data(data)
@@ -93,6 +94,15 @@ export class ScatterPlotComponent implements AfterViewInit {
           .attr("cy", function (d) { return y(d.y); } )
           .attr("r", 2.5)
           .style("fill", "#69b3a2")
+          .on("mouseover", (event, d) => {
+            tooltip.transition().duration(200).style("opacity", .9);
+            tooltip.html(d.tooltip)
+              .style("left", (event.pageX + 5) + "px")
+              .style("top", (event.pageY - 28) + "px");
+          })
+          .on("mouseout", () => {
+            tooltip.transition().duration(500).style("opacity", 0);
+          });
     }
 
   }

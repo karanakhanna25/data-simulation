@@ -1,8 +1,31 @@
 
-<scatter-plot-chart [data]="(data$ | async) || []"></scatter-plot-chart>
-<div class="select-label timeframe" [formGroup]="form">
-  <select formControlName="timeFrame" >
-    <option *ngFor="let option of timeFrameOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
-  </select>
-  <label>TimeFrame</label>
-</div>
+<ng-container [formGroup]="form">
+  <div class="scatter-plot-data">
+    <scatter-plot-chart [data]="(data$ | async) || []"></scatter-plot-chart>
+    <div class="select-label timeframe">
+      <select formControlName="timeFrame" >
+        <option *ngFor="let option of timeFrameOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+      </select>
+      <label>TimeFrame</label>
+    </div>
+  </div>
+  <div class="market-cycle-data">
+    <line-chart [data]="(marketCycleData$ | async) || []" #lineChart></line-chart>
+    <div class="controls">
+      <div class="select-label data-type">
+        <select formControlName="type">
+          <option *ngFor="let option of typeOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+        </select>
+        <label>Value</label>
+      </div>
+      <div class="select-label datetimeframe">
+        <select formControlName="dateTimeframe">
+          <option *ngFor="let option of timeFrameOptions" value="option.value" [ngValue]="option.value">{{option.label}}</option>
+        </select>
+        <label>TimeFrame</label>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+

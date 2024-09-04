@@ -15,6 +15,7 @@ export class SimulationDataStore extends ComponentStore<ISimulationDataState> {
   readonly gusData$ = this.select(state => (this._filterBrokenTickers(state.allRecords || [])));
 
   readonly equity = this.selectSignal(state => [...[this._configStore.simulationEngineConfig().equity], ...state.visibleRows.map(g => g.Equity)]);
+  readonly equity$ = this.select(state => [...[this._configStore.simulationEngineConfig().equity], ...state.visibleRows.map(g => g.Equity)]);
   readonly config = this._configStore.simulationEngineConfig;
 
   readonly visibleRows = this.selectSignal(state => state.visibleRows);

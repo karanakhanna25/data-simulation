@@ -23,7 +23,10 @@ export class SimulationEngineComponent implements OnInit {
   @ViewChild('lineChart')
   lineChart!: LineChartComponent;
 
-  equity = this._store.equity as Signal<(number)[]>;
+  equity = (this._store.equity as Signal<(number)[]>);
+  equity$ = this._store.equity$.pipe(
+    map(data => data.map((d, i) => ({x: i.toString(), y: d as number})))
+   );
 
   readonly timeFrameOptions = [
     {value: 15, label: '9:45 a.m.'},

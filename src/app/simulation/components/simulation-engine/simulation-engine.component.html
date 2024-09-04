@@ -109,5 +109,5 @@
   </div>
 </section>
 <section class="bottom-section">
-  <line-chart [data]="equity() || []" #lineChart></line-chart>
+  <line-chart [data]="(equity$ | async) || []" #lineChart></line-chart>
 </section>

@@ -6,3 +6,22 @@
   box-shadow: 0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px rgba(0,0,0,0.141176), 0 1px 10px rgba(0,0,0, 0.12156);
   border-radius: 4px;
 }
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #ccc;  /* Light gray line for better visibility */
+  shape-rendering: crispEdges;
+}
+
+/* Additional styling for the ticks */
+.tick line {
+  stroke-width: 1;
+  stroke: #ccc;  /* Light gray for tick lines */
+}
+
+/* Optional: Style the tick labels */
+.tick text {
+  font-size: 12px;
+  fill: #333;  /* Darker text for better contrast */
+}
